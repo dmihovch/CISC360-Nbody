@@ -1,6 +1,6 @@
-serial/serial
-cuda/cuda
-pthreads/pthreads
+serial/serial-impl
+cuda/cuda-impl
+pthreads/pthreads-impl
 # Prerequisites
 *.d
 
