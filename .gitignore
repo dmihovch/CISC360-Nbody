@@ -1,3 +1,6 @@
+serial/serial
+cuda/cuda
+pthreads/pthreads
 # Prerequisites
 *.d
 
