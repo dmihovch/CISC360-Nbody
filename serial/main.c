@@ -31,12 +31,21 @@ int main(int argc, char** argv){
 		printf("No particle count passed to program\nUsing default value of %d\nUsage: ./serial <body count>\n",nbodies);
 	}
 
-	Body* bodies = alloc_rand_nbodies(nbodies);
-	if(bodies == NULL)
+	//Body* bodies = alloc_rand_nbodies(nbodies);
+	Body bodies[nbodies];
+	for(int i = 0; i<nbodies; i++)
 	{
-		CloseWindow();
-		return 1;
+		bodies[i] = create_rand_body();
 	}
+
+	bodies[0] = (Body){
+		.pos = {WIDTH/2.,HEIGHT/2.},
+		.vel = {0,0},
+		.acc = {0,0},
+		.r = 15,
+		.m = 10000,
+		.color = YELLOW,
+	};
 	
 
 	double frametime_start;
@@ -75,7 +84,6 @@ int main(int argc, char** argv){
 
 	}
 
-	free(bodies);
 
 	if(WindowShouldClose())
 	{
