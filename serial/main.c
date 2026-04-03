@@ -5,15 +5,8 @@
 
 
 int main(int argc, char** argv){
-	InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ SERIAL ]");
-	if(!IsWindowReady())
-	{
-		return 1;
-	}
 
-	srand(time(NULL));
-	
-
+	srand(420);
 	int nbodies = BODIES;
 
 	if(argc >= 2)
@@ -24,28 +17,26 @@ int main(int argc, char** argv){
 			nbodies = argv_bodies;
 		}
 		else{
-			printf("Your input resulted in nbodies == 0, defaulting to %d\n",nbodies);
+			printf("Your input couldn't be parsed, defaulting to %d bodies\n",nbodies);
 		}
 	}
 	else{
-		printf("No particle count passed to program\nUsing default value of %d\nUsage: ./serial <body count>\n",nbodies);
+		printf("No body count passed to program\nUsing default value of %d bodies\nUsage: ./serial <body count>\n",nbodies);
 	}
 
-	//Body* bodies = alloc_rand_nbodies(nbodies);
-	Body bodies[nbodies];
-	for(int i = 0; i<nbodies; i++)
+	Body* bodies = alloc_rand_nbodies(nbodies);
+	if(bodies == NULL)
 	{
-		bodies[i] = create_rand_body();
+		printf("Failed to allocate %d bodies\n",nbodies);
+		return 1;
 	}
 
-	bodies[0] = (Body){
-		.pos = {WIDTH/2.,HEIGHT/2.},
-		.vel = {0,0},
-		.acc = {0,0},
-		.r = 15,
-		.m = 10000,
-		.color = YELLOW,
-	};
+	InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ SERIAL ]");
+	if(!IsWindowReady())
+	{
+		free(bodies);
+		return 1;
+	}
 	
 
 	double frametime_start;
@@ -84,6 +75,7 @@ int main(int argc, char** argv){
 
 	}
 
+	free(bodies);
 
 	if(WindowShouldClose())
 	{
