@@ -16,6 +16,7 @@ git clone --depth 1 https://github.com/raysan5/raylib.git raylib
 cd raylib/src/
 make PLATFORM=PLATFORM_DESKTOP
 sudo make install
+sudo cp libraylib.a /usr/local/include/
 ```
 if you are on Wayland, use:
 ```make PLATFORM=PLATFORM_DESKTOP USE_WAYLAND=DISPLAY_WAYLAND```
