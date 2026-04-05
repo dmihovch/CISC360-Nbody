@@ -19,11 +19,11 @@ int draw_diagnostics(double frametime_start, double frametime_end, double render
 	int x_pos = (int)(WIDTH * 0.01f);
 	int y_pos = (int)(HEIGHT * 0.04f);
 
-	DrawText(TextFormat("total frametime: %.3f ms", tft), x_pos, y_pos, 22, BLACK);
-	DrawText(TextFormat("render time: %.3f ms", trt), x_pos, y_pos + 30, 22, BLACK);
-	DrawText(TextFormat("update time: %.3f ms", tut), x_pos, y_pos + 60, 22, BLACK);
-	DrawText(TextFormat("overhead time: %.3f ms", over), x_pos, y_pos + 90, 22, BLACK);
-	DrawText(TextFormat("bodies: %d", nbodies), x_pos, y_pos + 120, 22, BLACK);
+	DrawText(TextFormat("total frametime: %.3f ms", tft), x_pos, y_pos, 22, WHITE);
+	DrawText(TextFormat("render time: %.3f ms", trt), x_pos, y_pos + 30, 22, WHITE);
+	DrawText(TextFormat("update time: %.3f ms", tut), x_pos, y_pos + 60, 22, WHITE);
+	DrawText(TextFormat("overhead time: %.3f ms", over), x_pos, y_pos + 90, 22, WHITE);
+	DrawText(TextFormat("bodies: %d", nbodies), x_pos, y_pos + 120, 22, WHITE);
 
 	return 0;
 }

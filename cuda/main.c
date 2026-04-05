@@ -48,8 +48,12 @@ int main(int argc, char** argv){
 	double update_start;
 	double update_end;
 	
-	SetTargetFPS(FPS);
-	while(!WindowShouldClose() && GetKeyPressed() != KEY_Q)
+	double total_frame_time = 0;
+	double total_update_time = 0;
+	long long total_frames = 0;
+
+  //SetTargetFPS(FPS);
+	while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 10)
 	{
 
 		frametime_start = GetTime();
@@ -61,20 +65,30 @@ int main(int argc, char** argv){
 
 		render_start = GetTime();
 		BeginDrawing();
-		ClearBackground(GRAY);
+		ClearBackground(BLACK);
 		draw_bodies(bodies, nbodies);
 		render_end = GetTime();
 
 		DrawFPS(0, 0);
 
-		frametime_end = GetTime();
 
-		draw_diagnostics(frametime_start, frametime_end, render_start, render_end, update_start, update_end, nbodies);
+
+		//draw_diagnostics(frametime_start, frametime_end, render_start, render_end, update_start, update_end, nbodies);
 
 		EndDrawing();
 
+		frametime_end = GetTime();
+
+		total_frame_time += (frametime_end - frametime_start);
+		total_update_time += (update_end - update_start);
+		total_frames++;
 	}
 
+
+	double average_frame_time = (total_frame_time * 1000) / total_frames;
+	double average_update_time = (total_update_time * 1000) / total_frames;
+	printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\ntotal_frames: %lld\n\n",average_frame_time,average_update_time,total_frames);
+	
 	free(bodies);
 
 	if(WindowShouldClose())

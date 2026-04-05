@@ -1,14 +1,14 @@
 all: main.c src/physics.c src/drawing.c src/bodies.c src/maths.c
-	gcc -o cuda-impl main.c src/drawing.c src/physics.c src/bodies.c src/maths.c -lraylib -lm -ldl -pthread
+	gcc -o serial-impl main.c src/drawing.c src/physics.c src/bodies.c src/maths.c -lraylib -lm -ldl -pthread
 
 wayland: main.c src/physics.c src/drawing.c src/bodies.c src/maths.c
-	gcc -o cuda-impl main.c src/drawing.c src/physics.c src/bodies.c src/maths.c -lraylib -lm -ldl -pthread -lX11
+	gcc -o serial-impl main.c src/drawing.c src/physics.c src/bodies.c src/maths.c -lraylib -lm -ldl -pthread -lX11
 
-clean: cuda-impl 
-	rm cuda-impl 
+clean: serial-impl 
+	rm serial-impl 
 
-run: cuda-impl
-	./cuda-impl
+run: serial-impl
+	./serial-impl
 
-valgrind: cuda-impl 
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ./cuda-impl
+valgrind: serial-impl 
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ./serial-impl
