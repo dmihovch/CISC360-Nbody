@@ -1,7 +1,14 @@
 #include "include/drawing.h"
 #include "include/bodies.h"
 #include "include/physics.h"
+#include <cuda_runtime_api.h>
 #include <raylib.h>
+#include <cuda.h>
+
+__global__ void dothething()
+{
+	
+}
 
 
 int main(int argc, char** argv){
@@ -38,6 +45,10 @@ int main(int argc, char** argv){
 		return 1;
 	}
 	
+	dothething<<<1,1>>>();
+	cudaDeviceSynchronize();
+	printf("we did it joe!\n");
+	return 69;
 
 	double frametime_start;
 	double frametime_end;
@@ -88,7 +99,8 @@ int main(int argc, char** argv){
 	double average_frame_time = (total_frame_time * 1000) / total_frames;
 	double average_update_time = (total_update_time * 1000) / total_frames;
 	printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\ntotal_frames: %lld\n\n",average_frame_time,average_update_time,total_frames);
-	
+
+
 	free(bodies);
 
 	if(WindowShouldClose())

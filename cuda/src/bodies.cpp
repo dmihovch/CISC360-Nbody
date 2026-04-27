@@ -2,7 +2,7 @@
 
 Body* alloc_rand_nbodies(int nbodies)
 {
-	Body* b_arr = malloc(nbodies*sizeof(Body));
+	Body* b_arr = (Body*)malloc(nbodies*sizeof(Body));
 	if(!b_arr)
 	{
 		return NULL;
