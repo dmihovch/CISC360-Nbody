@@ -4,7 +4,9 @@
 #include <string.h>
 #include <stdio.h>
 
-void draw_bodies(Body* b, int nbodies);
+  
+
+void draw_bodies(Bodies b, Color* colors);
 int draw_diagnostics(double frametime_start, double frametime_end, double render_start, double render_end, double update_start, double update_end, int nbodies);
 
 #endif //DRAWING_H

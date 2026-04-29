@@ -8,7 +8,7 @@ int alloc_rand_nbodies_device(Bodies* b, int n)
 	errs[1] = cudaMalloc(&b->vel,sizeof(Vector2)* n);
 	errs[2] = cudaMalloc(&b->acc,sizeof(Vector2)* n);
 	errs[3] = cudaMalloc(&b->m,sizeof(float)*n);
-	errs[4] =cudaMalloc(&b->r,sizeof(float)*n);
+	errs[4] = cudaMalloc(&b->r,sizeof(float)*n);
 
 	for(int i = 0; i<5; i++)
 	{
@@ -96,5 +96,13 @@ Color rand_color()
 {
 	Color colors[] = {RAYWHITE,RED,BLUE,PURPLE,PINK,YELLOW,ORANGE,GREEN};
 	return colors[rand()%8];
+}
+
+void assign_rand_colors(Color* colors, int n)
+{
+	for(int i = 0; i<n; i++)
+	{
+		colors[i] = rand_color();
+	}
 }
 

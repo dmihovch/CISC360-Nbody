@@ -4,11 +4,7 @@
 #include "constants.h"
 #include "maths.h"
 #include <math.h>
-void update_bodies(Body* b, int nbodies);
-void reset_accelerations(Body* p, int nbodies);
-void accumulate_forces(Body* p, int nbodies);
-void move_bodies_handle_wall_collisions(Body* p, int nbodies);
-void handle_body_body_collisions(Body* p, int nbodies);
+
 Vector2 check_collisions_circles(float* scalar_dist,Vector2 apos, float ar, Vector2 bpos, float br);
 float calculate_impulse(Body a, Body b, Vector2 normal);
 bool collision_occured(Vector2 normal);

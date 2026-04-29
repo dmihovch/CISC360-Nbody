@@ -1,3 +1,0 @@
-/home/dan/school/CISC360-Nbody/cuda/build/CMakeFiles/cuda-impl.dir
-/home/dan/school/CISC360-Nbody/cuda/build/CMakeFiles/edit_cache.dir
-/home/dan/school/CISC360-Nbody/cuda/build/CMakeFiles/rebuild_cache.dir

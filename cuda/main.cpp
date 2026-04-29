@@ -46,32 +46,43 @@ int main(int argc, char** argv){
 		return 1;
 	}
 
-
-	InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ SERIAL ]");
-	if(!IsWindowReady())
+	Color* colors = (Color*)malloc(sizeof(Color)*nbodies);
+	if(colors == NULL)
 	{
 		free_h_bodies(h_bodies);
 		free_d_bodies(d_bodies);
 		return 1;
 	}
+	assign_rand_colors(colors,nbodies);
+
+	InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ SERIAL ]");
+	if(!IsWindowReady())
+	{
+		free_d_bodies(d_bodies);
+		free_h_bodies(h_bodies);
+		free(colors);
+		return 1;
+	}
 
 	
-	double hotpath_memcpy_start;
-	double hotpath_memcpy_end;
+	double hotpath_memcpy_start = 0;
+	double hotpath_memcpy_end = 0;
 
-	double frametime_start;
-	double frametime_end;
+	double frametime_start = 0;
+	double frametime_end = 0;
 
-	double render_start;
-	double render_end;
+	double render_start = 0;
+	double render_end = 0;
 
-	double update_start;
-	double update_end;
+	double update_start = 0;
+	double update_end = 0;
 	
 	double total_frame_time = 0;
 	double total_update_time = 0;
 	long long total_frames = 0;
 
+	double average_frame_time = 0;
+	double average_update_time = 0;
   //SetTargetFPS(FPS);
 	while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 10)
 	{
@@ -82,24 +93,31 @@ int main(int argc, char** argv){
 		update_bodies(d_bodies);
 
 		//errors
-		cudaDeviceSynchronize();
+		if(cudaDeviceSynchronize() != cudaSuccess)
+		{
+			goto free_and_exit;
+		}
 		update_end = GetTime();
 
 		hotpath_memcpy_start = GetTime();
 
 		//errors
-		cudaMemcpy(h_bodies.pos, d_bodies.pos, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToHost);
-		cudaMemcpy(h_bodies.vel, d_bodies.vel,sizeof(Vector2)* nbodies, cudaMemcpyDeviceToHost);
-		cudaMemcpy(h_bodies.acc, d_bodies.acc, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToHost);
-		cudaMemcpy(h_bodies.m, d_bodies.m, sizeof(float)*nbodies, cudaMemcpyDeviceToHost);
-		cudaMemcpy(h_bodies.r, d_bodies.r, sizeof(float)*nbodies, cudaMemcpyDeviceToHost);
+		if(
+			cudaMemcpy(h_bodies.pos, d_bodies.pos, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess ||
+			cudaMemcpy(h_bodies.vel, d_bodies.vel,sizeof(Vector2)* nbodies, cudaMemcpyDeviceToHost) != cudaSuccess ||
+			cudaMemcpy(h_bodies.acc, d_bodies.acc, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess ||
+			cudaMemcpy(h_bodies.m, d_bodies.m, sizeof(float)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess ||
+			cudaMemcpy(h_bodies.r, d_bodies.r, sizeof(float)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess
+		) {
+				goto free_and_exit;
+			}
 
 		hotpath_memcpy_end = GetTime();
 
 		render_start = GetTime();
 		BeginDrawing();
 		ClearBackground(BLACK);
-		draw_bodies(h_bodies);
+		draw_bodies(h_bodies, colors);
 		render_end = GetTime();
 
 		DrawFPS(0, 0);
@@ -118,13 +136,17 @@ int main(int argc, char** argv){
 	}
 
 
-	double average_frame_time = (total_frame_time * 1000) / total_frames;
-	double average_update_time = (total_update_time * 1000) / total_frames;
+	average_frame_time = (total_frame_time * 1000) / total_frames;
+	average_update_time = (total_update_time * 1000) / total_frames;
 	printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\ntotal_frames: %lld\n\n",average_frame_time,average_update_time,total_frames);
 
 	
+
+free_and_exit:
+	
 	free_h_bodies(h_bodies);
 	free_d_bodies(d_bodies);
+	free(colors);
 
 	if(WindowShouldClose())
 	{

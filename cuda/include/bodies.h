@@ -28,9 +28,15 @@ typedef struct
 } Bodies;
 
 
+
+void safe_free(void* ptr);
+void free_h_bodies(Bodies h_bodies);
+void safe_cudaFree(void* dptr);
+void free_d_bodies(Bodies d_bodies);
 void free_h_bodies(Bodies h_bodies);
 void free_d_bodies(Bodies d_bodies);
 int alloc_rand_nbodies_host(Bodies* h_bodies, int nbodies);
 int alloc_rand_nbodies_device(Bodies* h_bodies, int nbodies);
+void assign_rand_colors(Color* colors, int n);
 Color rand_color();
 #endif //BODIES
