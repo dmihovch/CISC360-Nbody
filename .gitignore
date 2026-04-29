@@ -1,5 +1,5 @@
 serial/serial-impl
-cuda/cuda-impl
+cuda/build/
 pthreads/pthreads-impl
 # Prerequisites
 *.d
