@@ -1,0 +1,38 @@
+[
+{
+  "directory": "/home/dan/school/CISC360-Nbody/cuda/build",
+  "command": "/usr/bin/nvcc -forward-unknown-to-host-compiler -ccbin=/usr/bin/g++-12  --options-file CMakeFiles/cuda-impl.dir/includes_CUDA.rsp  -arch=native -x cu -c /home/dan/school/CISC360-Nbody/cuda/main.cu -o CMakeFiles/cuda-impl.dir/main.cu.o",
+  "file": "/home/dan/school/CISC360-Nbody/cuda/main.cu",
+  "output": "CMakeFiles/cuda-impl.dir/main.cu.o"
+},
+{
+  "directory": "/home/dan/school/CISC360-Nbody/cuda/build",
+  "command": "/usr/bin/c++  -I/home/dan/school/CISC360-Nbody/cuda/include  -o CMakeFiles/cuda-impl.dir/src/drawing.cpp.o -c /home/dan/school/CISC360-Nbody/cuda/src/drawing.cpp",
+  "file": "/home/dan/school/CISC360-Nbody/cuda/src/drawing.cpp",
+  "output": "CMakeFiles/cuda-impl.dir/src/drawing.cpp.o"
+},
+{
+  "directory": "/home/dan/school/CISC360-Nbody/cuda/build",
+  "command": "/usr/bin/nvcc -forward-unknown-to-host-compiler -ccbin=/usr/bin/g++-12  --options-file CMakeFiles/cuda-impl.dir/includes_CUDA.rsp  -arch=native -x cu -c /home/dan/school/CISC360-Nbody/cuda/src/kernels.cu -o CMakeFiles/cuda-impl.dir/src/kernels.cu.o",
+  "file": "/home/dan/school/CISC360-Nbody/cuda/src/kernels.cu",
+  "output": "CMakeFiles/cuda-impl.dir/src/kernels.cu.o"
+},
+{
+  "directory": "/home/dan/school/CISC360-Nbody/cuda/build",
+  "command": "/usr/bin/c++  -I/home/dan/school/CISC360-Nbody/cuda/include  -o CMakeFiles/cuda-impl.dir/src/maths.cpp.o -c /home/dan/school/CISC360-Nbody/cuda/src/maths.cpp",
+  "file": "/home/dan/school/CISC360-Nbody/cuda/src/maths.cpp",
+  "output": "CMakeFiles/cuda-impl.dir/src/maths.cpp.o"
+},
+{
+  "directory": "/home/dan/school/CISC360-Nbody/cuda/build",
+  "command": "/usr/bin/c++  -I/home/dan/school/CISC360-Nbody/cuda/include  -o CMakeFiles/cuda-impl.dir/src/physics.cpp.o -c /home/dan/school/CISC360-Nbody/cuda/src/physics.cpp",
+  "file": "/home/dan/school/CISC360-Nbody/cuda/src/physics.cpp",
+  "output": "CMakeFiles/cuda-impl.dir/src/physics.cpp.o"
+},
+{
+  "directory": "/home/dan/school/CISC360-Nbody/cuda/build",
+  "command": "/usr/bin/c++  -I/home/dan/school/CISC360-Nbody/cuda/include  -o CMakeFiles/cuda-impl.dir/src/bodies.cpp.o -c /home/dan/school/CISC360-Nbody/cuda/src/bodies.cpp",
+  "file": "/home/dan/school/CISC360-Nbody/cuda/src/bodies.cpp",
+  "output": "CMakeFiles/cuda-impl.dir/src/bodies.cpp.o"
+}
+]

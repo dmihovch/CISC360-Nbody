@@ -1,13 +1,6 @@
 #include "../include/physics.h"
 
 
-void update_bodies(Body* b_arr, int nbodies){
-	reset_accelerations(b_arr,nbodies);
-	accumulate_forces(b_arr,nbodies);
-	move_bodies_handle_wall_collisions(b_arr,nbodies);
-	handle_body_body_collisions(b_arr,nbodies);
-}
-
 void reset_accelerations(Body* b_arr, int nbodies)
 {
 	for(int i = 0; i<nbodies; ++i)

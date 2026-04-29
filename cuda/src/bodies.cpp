@@ -1,36 +1,96 @@
 #include "../include/bodies.h"
 
-Body* alloc_rand_nbodies(int nbodies)
+//ya it was too much typing before lol
+int alloc_rand_nbodies_device(Bodies* b, int n)
 {
-	Body* b_arr = (Body*)malloc(nbodies*sizeof(Body));
-	if(!b_arr)
+	cudaError_t errs[5];
+	errs[0] = cudaMalloc(&b->pos,sizeof(Vector2)* n);
+	errs[1] = cudaMalloc(&b->vel,sizeof(Vector2)* n);
+	errs[2] = cudaMalloc(&b->acc,sizeof(Vector2)* n);
+	errs[3] = cudaMalloc(&b->m,sizeof(float)*n);
+	errs[4] =cudaMalloc(&b->r,sizeof(float)*n);
+
+	for(int i = 0; i<5; i++)
 	{
-		return NULL;
+		if(errs[i] != cudaSuccess)
+		{
+			return 1;
+		}
 	}
 
-	for(int i = 0; i < nbodies; ++i)
+
+	for(int i = 0; i<n; i++)
 	{
-		b_arr[i] = create_rand_body();
+		b->pos[i] = (Vector2){rand_float(0,WIDTH),rand_float(0,HEIGHT)};
+		b->vel[i] = (Vector2){rand_float(-20.0,20.0),rand_float(-20.0,20.0)};
+		b->acc[i] = (Vector2){0,0};
+		b->m[i] = 10.;
+		b->r[i] = 10.;
 	}
 
-	return b_arr;
+	b->nbodies = n;
 
+	return 0;
+	
 }
 
-Body create_rand_body()
+int alloc_rand_nbodies_host(Bodies* h_bodies, int nbodies)
 {
-	return (Body)
+	h_bodies->pos = (Vector2*)malloc(sizeof(Vector2)* nbodies);
+	h_bodies->vel = (Vector2*)malloc(sizeof(Vector2)* nbodies);
+	h_bodies->acc = (Vector2*)malloc(sizeof(Vector2)* nbodies);
+	h_bodies->m = (float*)(sizeof(float)*nbodies);
+	h_bodies->r = (float*)malloc(sizeof(float)*nbodies);
+
+	if(h_bodies->pos == NULL
+	   || h_bodies->vel == NULL
+		 || h_bodies->acc == NULL
+		 || h_bodies->m == NULL
+		 || h_bodies->r == NULL
+		)
+			{
+				return 1;
+			}
+	h_bodies->nbodies = nbodies;
+
+
+	return 0;
+}
+
+void safe_free(void* ptr)
+{
+	if(ptr != NULL)
 	{
-		.pos = (Vector2){rand_float(0,WIDTH),rand_float(0,HEIGHT)},
-		.vel = (Vector2){rand_float(-20.0,20.0),rand_float(-20.0,20.0)},
-		.acc = (Vector2){0,0},
-		.r = 10.,
-		.m = 10.,
-		.color = rand_color(),
-	};
+		free(ptr);
+	}
+}
+
+void free_h_bodies(Bodies h_bodies)
+{
+	safe_free(h_bodies.pos);
+	safe_free(h_bodies.vel);
+	safe_free(h_bodies.acc);
+	safe_free(h_bodies.m);
+	safe_free(h_bodies.r);
 }
 
 
+void safe_cudaFree(void* dptr)
+{
+	if(dptr != NULL)
+	{
+		cudaFree(dptr);
+	}
+}
+
+void free_d_bodies(Bodies d_bodies)
+{
+	safe_cudaFree(d_bodies.pos);
+	safe_cudaFree(d_bodies.vel);
+	safe_cudaFree(d_bodies.acc);
+	safe_cudaFree(d_bodies.m);
+	safe_cudaFree(d_bodies.r);
+}
 
 Color rand_color()
 {
