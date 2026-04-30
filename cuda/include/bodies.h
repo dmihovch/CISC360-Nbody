@@ -1,6 +1,7 @@
 #ifndef BODIES_H
 #define BODIES_H
 #include <stdlib.h>
+#include <string.h>
 #include "raylib.h"
 #include <cuda_runtime.h>
 #include "constants.h"
@@ -34,9 +35,9 @@ void free_h_bodies(Bodies h_bodies);
 void safe_cudaFree(void* dptr);
 void free_d_bodies(Bodies d_bodies);
 void free_h_bodies(Bodies h_bodies);
-void free_d_bodies(Bodies d_bodies);
+void free_d_bodies(Bodies d_bodies, Vector2* old_pos, Vector2* old_vel);
 int alloc_rand_nbodies_host(Bodies* h_bodies, int nbodies);
-int alloc_rand_nbodies_device(Bodies* h_bodies, int nbodies);
+int alloc_rand_nbodies_device(Bodies* h_bodies, Vector2** old_pos, Vector2** old_vel, int nbodies);
 void assign_rand_colors(Color* colors, int n);
 Color rand_color();
 #endif //BODIES
