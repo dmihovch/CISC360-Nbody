@@ -1,6 +1,6 @@
 #include "include/drawing.h"
+#include "kernels/kernels.cuh"
 #include "include/bodies.h"
-#include "include/physics.h"
 #include <cuda_runtime_api.h>
 #include <raylib.h>
 #include <cuda.h>
@@ -36,15 +36,17 @@ int main(int argc, char** argv){
 	}
 
 	Bodies d_bodies;
-
-	err = alloc_rand_nbodies_device(&d_bodies,nbodies);
+	Vector2* d_old_pos;
+	Vector2* d_old_vel;
+	err = alloc_rand_nbodies_device(&d_bodies, &d_old_pos, &d_old_vel, nbodies);
 	if(err)
 	{
 		printf("Failed to allocate %d bodies on GPU\n",nbodies);
-		free_d_bodies(d_bodies);
+		free_d_bodies(d_bodies, d_old_pos, d_old_vel);
 		free_h_bodies(h_bodies);
 		return 1;
 	}
+
 
 	Color* colors = (Color*)malloc(sizeof(Color)*nbodies);
 	if(colors == NULL)
@@ -79,10 +81,12 @@ int main(int argc, char** argv){
 	
 	double total_frame_time = 0;
 	double total_update_time = 0;
+	double total_hotpath_memcpy_time = 0;
 	long long total_frames = 0;
 
 	double average_frame_time = 0;
 	double average_update_time = 0;
+	double average_hotpath_memcpy_time = 0;
   //SetTargetFPS(FPS);
 	while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 10)
 	{
@@ -132,20 +136,23 @@ int main(int argc, char** argv){
 
 		total_frame_time += (frametime_end - frametime_start);
 		total_update_time += (update_end - update_start);
+		total_hotpath_memcpy_time += (hotpath_memcpy_end - hotpath_memcpy_start);
 		total_frames++;
 	}
 
 
 	average_frame_time = (total_frame_time * 1000) / total_frames;
 	average_update_time = (total_update_time * 1000) / total_frames;
-	printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\ntotal_frames: %lld\n\n",average_frame_time,average_update_time,total_frames);
+	average_hotpath_memcpy_time = (total_hotpath_memcpy_time * 1000) / total_frames;
+	printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\nhotpath_memcpy_time: %.5f ms\ntotal_frames: %lld\n\n",average_frame_time,average_update_time,average_hotpath_memcpy_time,total_frames);
+
 
 	
 
 free_and_exit:
 	
 	free_h_bodies(h_bodies);
-	free_d_bodies(d_bodies);
+	free_d_bodies(d_bodies, d_old_pos, d_old_vel);
 	free(colors);
 
 	if(WindowShouldClose())

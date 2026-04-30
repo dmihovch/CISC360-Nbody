@@ -1,7 +1,7 @@
-#include "../include/maths.h"
+#include "../include/maths.cuh"
 #include <raylib.h>
 
-float vec2_distance_squared(Vector2 a, Vector2 b)
+__device__ float vec2_distance_squared(Vector2 a, Vector2 b)
 {
 	Vector2 delta = vec2_sub(b,a);
 	return vec2_dot(delta,delta);
@@ -27,36 +27,36 @@ float rand_float(float tmin, float tmax)
 	return ret * (tmax - tmin) + tmin;
 }
 
-void vec2_negate_ip(Vector2* v)
+__device__ void vec2_negate_ip(Vector2* v)
 {
 	v->x = -v->x;
 	v->y = -v->y;
 }
 
-void vec2_add_ip(Vector2* res, Vector2 v)
+__device__ void vec2_add_ip(Vector2* res, Vector2 v)
 {
 	res->x += v.x;
 	res->y += v.y;
 }
 
-void vec2_sub_ip(Vector2 *res, Vector2 v)
+__device__ void vec2_sub_ip(Vector2 *res, Vector2 v)
 {
 	res->x -= v.x;
 	res->y -= v.y;
 }
 
-void vec2_zero(Vector2* v)
+__device__ void vec2_zero(Vector2* v)
 {
 	v->x = 0;
 	v->y = 0;
 }
 
-float vec2_dot(Vector2 a, Vector2 b)
+__device__ float vec2_dot(Vector2 a, Vector2 b)
 {
 	return (a.x * b.x) + (a.y * b.y);
 }
 
-Vector2 vec2_sub(Vector2 a, Vector2 b)
+__device__ Vector2 vec2_sub(Vector2 a, Vector2 b)
 {
 	return (Vector2)
 	{
@@ -65,13 +65,13 @@ Vector2 vec2_sub(Vector2 a, Vector2 b)
 	};
 }
 
-void vec2_scalar_mult_ip(Vector2* v, float scalar)
+__device__ void vec2_scalar_mult_ip(Vector2* v, float scalar)
 {
 	v->x *= scalar;
 	v->y *= scalar;
 }
 
-Vector2 vec2_scalar_mult(Vector2 v, float scalar)
+__device__ Vector2 vec2_scalar_mult(Vector2 v, float scalar)
 {
 	return (Vector2)
 	{
