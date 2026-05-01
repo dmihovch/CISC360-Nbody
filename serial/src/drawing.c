@@ -1,9 +1,9 @@
 #include "../include/drawing.h"
-void draw_bodies(Body* b_arr, int n)
+void draw_bodies(Bodies b_arr, Color* colors)
 {
-	for(int i = 0; i<n; ++i)
+	for(int i = 0; i<b_arr.nbodies; ++i)
 	{
-		DrawCircle(b_arr[i].pos.x, b_arr[i].pos.y,b_arr[i].r, b_arr[i].color);
+		DrawCircle(b_arr.pos[i].x, b_arr.pos[i].y,b_arr.r[i], colors[i]);
 	}
 	return;
 }
