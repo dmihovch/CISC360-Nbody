@@ -5,160 +5,155 @@
 #include <cuda_runtime_api.h>
 #include <raylib.h>
 #include <cuda.h>
-
-
+#include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char** argv){
 
-	srand(420);
-	int nbodies = BODIES;
-	if(argc >= 2)
-	{
-		int argv_bodies = atoi(argv[1]);
-		if(argv_bodies >= 1)
-		{
-			nbodies = argv_bodies;
-		}
-		else{
-			printf("Your input couldn't be parsed, defaulting to %d bodies\n",nbodies);
-		}
-	}
-	else{
-		printf("No body count passed to program\nUsing default value of %d bodies\nUsage: ./serial <body count>\n",nbodies);
-	}
-	int err;
-	Bodies h_bodies;
-	err = alloc_rand_nbodies_host(&h_bodies, nbodies);
-	if(err)
-	{
-		printf("Failed to allocate %d bodies\n",nbodies);
-		free_h_bodies(h_bodies);
-		return 1;
-	}
+    srand(420);
+    int nbodies = BODIES;
+    if(argc >= 2)
+    {
+        int argv_bodies = atoi(argv[1]);
+        if(argv_bodies >= 1)
+        {
+            nbodies = argv_bodies;
+        }
+        else{
+            printf("Your input couldn't be parsed, defaulting to %d bodies\n",nbodies);
+        }
+    }
+    else{
+        printf("No body count passed to program\nUsing default value of %d bodies\nUsage: ./serial <body count>\n",nbodies);
+    }
+    int err;
+    Bodies h_bodies;
+    err = alloc_rand_nbodies_host(&h_bodies, nbodies);
+    if(err)
+    {
+        printf("Failed to allocate %d bodies\n",nbodies);
+        free_h_bodies(h_bodies);
+        return 1;
+    }
 
-	Bodies d_bodies;
-	DoubleBuffers tmp_new_bufs;
-	err = alloc_rand_nbodies_device(&d_bodies, &tmp_new_bufs, nbodies);
-	if(err)
-	{
-		printf("Failed to allocate %d bodies on GPU\n",nbodies);
-		free_d_bodies(d_bodies, tmp_new_bufs);
-		free_h_bodies(h_bodies);
-		return 1;
-	}
+    Bodies d_bodies;
+    DoubleBuffers tmp_new_bufs;
+    err = alloc_rand_nbodies_device(&d_bodies, &tmp_new_bufs, nbodies);
+    if(err)
+    {
+        printf("Failed to allocate %d bodies on GPU\n",nbodies);
+        free_d_bodies(d_bodies, tmp_new_bufs);
+        free_h_bodies(h_bodies);
+        return 1;
+    }
 
+    Color* colors = (Color*)malloc(sizeof(Color)*nbodies);
+    if(colors == NULL)
+    {
+        free_h_bodies(h_bodies);
+        free_d_bodies(d_bodies, tmp_new_bufs);
+        return 1;
+    }
+    assign_rand_colors(colors,nbodies);
 
-	Color* colors = (Color*)malloc(sizeof(Color)*nbodies);
-	if(colors == NULL)
-	{
-		free_h_bodies(h_bodies);
-		free_d_bodies(d_bodies, tmp_new_bufs);
-		return 1;
-	}
-	assign_rand_colors(colors,nbodies);
+    InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ GPU OFFLOADED ]");
+    if(!IsWindowReady())
+    {
+        free_d_bodies(d_bodies, tmp_new_bufs);
+        free_h_bodies(h_bodies);
+        free(colors);
+        return 1;
+    }
 
-	InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ GPU OFFLOADED ]");
-	if(!IsWindowReady())
-	{
-		free_d_bodies(d_bodies, tmp_new_bufs);
-		free_h_bodies(h_bodies);
-		free(colors);
-		return 1;
-	}
+    cudaMemcpy(d_bodies.pos,h_bodies.pos,sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
+    cudaMemcpy(d_bodies.vel, h_bodies.vel, sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
+    cudaMemcpy(d_bodies.acc, h_bodies.acc, sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
+    cudaMemcpy(d_bodies.r, h_bodies.r, sizeof(float)*nbodies,cudaMemcpyHostToDevice);
+    cudaMemcpy(d_bodies.m, h_bodies.m, sizeof(float)*nbodies,cudaMemcpyHostToDevice);
+    
+    cudaEvent_t update_start_ev, update_end_ev;
+    cudaEventCreate(&update_start_ev);
+    cudaEventCreate(&update_end_ev);
 
-	cudaMemcpy(d_bodies.pos,h_bodies.pos,sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
-	cudaMemcpy(d_bodies.vel, h_bodies.vel, sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
-	cudaMemcpy(d_bodies.acc, h_bodies.acc, sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
-	cudaMemcpy(d_bodies.r, h_bodies.r, sizeof(float)*nbodies,cudaMemcpyHostToDevice);
-	cudaMemcpy(d_bodies.m, h_bodies.m, sizeof(float)*nbodies,cudaMemcpyHostToDevice);
-	double hotpath_memcpy_start = 0;
-	double hotpath_memcpy_end = 0;
+    double hotpath_memcpy_start = 0;
+    double hotpath_memcpy_end = 0;
+    double frametime_start = 0;
+    double frametime_end = 0;
+    double render_start = 0;
+    double render_end = 0;
+    
+    double total_frame_time = 0;
+    double total_update_time = 0;
+    double total_hotpath_memcpy_time = 0;
+    double total_render_time = 0;
+    long long total_frames = 0;
 
-	double frametime_start = 0;
-	double frametime_end = 0;
+    double average_frame_time = 0;
+    double average_update_time = 0;
+    double average_hotpath_memcpy_time = 0;
+    double average_render_time = 0;
 
-	double render_start = 0;
-	double render_end = 0;
+    while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 30)
+    {
+        frametime_start = GetTime();
 
-	double update_start = 0;
-	double update_end = 0;
-	
-	double total_frame_time = 0;
-	double total_update_time = 0;
-	double total_hotpath_memcpy_time = 0;
-	long long total_frames = 0;
+        cudaEventRecord(update_start_ev);
+        update_bodies(&d_bodies, &tmp_new_bufs);
+        cudaEventRecord(update_end_ev);
 
-	double average_frame_time = 0;
-	double average_update_time = 0;
-	double average_hotpath_memcpy_time = 0;
-  //SetTargetFPS(FPS);
-	while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 30)
-	{
+        if(cudaEventSynchronize(update_end_ev) != cudaSuccess)
+        {
+            goto free_and_exit;
+        }
+        
+        float update_ms = 0;
+        cudaEventElapsedTime(&update_ms, update_start_ev, update_end_ev);
+        total_update_time += (update_ms / 1000.0);
 
-		frametime_start = GetTime();
+        hotpath_memcpy_start = GetTime();
 
-		update_start = GetTime();
-		update_bodies(&d_bodies, &tmp_new_bufs);
+        if(cudaMemcpy(h_bodies.pos, d_bodies.pos, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess) {
+            goto free_and_exit;
+        }
 
-		//errors
-		if(cudaDeviceSynchronize() != cudaSuccess)
-		{
-			goto free_and_exit;
-		}
-		update_end = GetTime();
+        hotpath_memcpy_end = GetTime();
 
-		hotpath_memcpy_start = GetTime();
+        render_start = GetTime();
+        BeginDrawing();
+        ClearBackground(BLACK);
+        draw_bodies(h_bodies, colors);
+        DrawFPS(0, 0);
+        EndDrawing();
+        render_end = GetTime();
 
-		//errors
-		if(cudaMemcpy(h_bodies.pos, d_bodies.pos, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess) {
-				goto free_and_exit;
-			}
+        frametime_end = GetTime();
 
-		hotpath_memcpy_end = GetTime();
+        total_frame_time += (frametime_end - frametime_start);
+        total_hotpath_memcpy_time += (hotpath_memcpy_end - hotpath_memcpy_start);
+        total_render_time += (render_end - render_start);
+        total_frames++;
+    }
 
-		render_start = GetTime();
-		BeginDrawing();
-		ClearBackground(BLACK);
-		draw_bodies(h_bodies, colors);
-		render_end = GetTime();
-
-		DrawFPS(0, 0);
-
-
-
-		//draw_diagnostics(frametime_start, frametime_end, render_start, render_end, update_start, update_end, nbodies);
-
-		EndDrawing();
-
-		frametime_end = GetTime();
-
-		total_frame_time += (frametime_end - frametime_start);
-		total_update_time += (update_end - update_start);
-		total_hotpath_memcpy_time += (hotpath_memcpy_end - hotpath_memcpy_start);
-		total_frames++;
-	}
-
-
-	average_frame_time = (total_frame_time * 1000) / total_frames;
-	average_update_time = (total_update_time * 1000) / total_frames;
-	average_hotpath_memcpy_time = (total_hotpath_memcpy_time * 1000) / total_frames;
-	printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\nhotpath_memcpy_time: %.5f ms\ntotal_frames: %lld\n\n",average_frame_time,average_update_time,average_hotpath_memcpy_time,total_frames);
-
-
-	
+    average_frame_time = (total_frame_time * 1000) / total_frames;
+    average_update_time = (total_update_time * 1000) / total_frames;
+    average_hotpath_memcpy_time = (total_hotpath_memcpy_time * 1000) / total_frames;
+    average_render_time = (total_render_time * 1000) / total_frames;
+    printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\nhotpath_memcpy_time: %.5f ms\nrender_time: %.5f ms\ntotal_frames: %lld\n\n",average_frame_time,average_update_time,average_hotpath_memcpy_time,average_render_time,total_frames);
 
 free_and_exit:
-	
-	free_h_bodies(h_bodies);
-	free_d_bodies(d_bodies, tmp_new_bufs);
-	free(colors);
+    cudaEventDestroy(update_start_ev);
+    cudaEventDestroy(update_end_ev);
+    free_h_bodies(h_bodies);
+    free_d_bodies(d_bodies, tmp_new_bufs);
+    free(colors);
 
-	if(WindowShouldClose())
-	{
-		CloseWindow();
-		return 1;
-	}
+    if(WindowShouldClose())
+    {
+        CloseWindow();
+        return 1;
+    }
 
-	CloseWindow();
-	return 0;
+    CloseWindow();
+    return 0;
 }
+

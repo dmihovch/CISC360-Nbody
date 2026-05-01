@@ -3,6 +3,7 @@
 #include "include/physics.h"
 #include <raylib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char** argv)
 {
@@ -39,15 +40,14 @@ int main(int argc, char** argv)
 
     double frametime_start;
     double frametime_end;
-
     double render_start;
     double render_end;
-
     double update_start;
     double update_end;
     
     double total_frame_time = 0;
     double total_update_time = 0;
+    double total_render_time = 0;
     long long total_frames = 0;
 
     while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 30)
@@ -62,22 +62,22 @@ int main(int argc, char** argv)
         BeginDrawing();
         ClearBackground(BLACK);
         draw_bodies(bodies, colors);
-        render_end = GetTime();
-
         DrawFPS(0, 0);
-
         EndDrawing();
+        render_end = GetTime();
 
         frametime_end = GetTime();
 
         total_frame_time += (frametime_end - frametime_start);
         total_update_time += (update_end - update_start);
+        total_render_time += (render_end - render_start);
         total_frames++;
     }
 
     double average_frame_time = (total_frame_time * 1000) / total_frames;
     double average_update_time = (total_update_time * 1000) / total_frames;
-    printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\ntotal_frames: %lld\n\n", average_frame_time, average_update_time, total_frames);
+    double average_render_time = (total_render_time * 1000) / total_frames;
+    printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\nrender_time: %.5f ms\ntotal_frames: %lld\n\n", average_frame_time, average_update_time, average_render_time, total_frames);
     
     free_bodies(&bodies, colors);
 
@@ -90,4 +90,3 @@ int main(int argc, char** argv)
     CloseWindow();
     return 0;
 }
-
