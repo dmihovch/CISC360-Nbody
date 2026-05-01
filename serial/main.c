@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     double total_update_time = 0;
     long long total_frames = 0;
 
-    while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 10)
+    while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 30)
     {
         frametime_start = GetTime();
 

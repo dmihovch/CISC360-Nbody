@@ -13,12 +13,10 @@ void update_bodies(Bodies* b_arr, DoubleBuffers* tmp_new_state){
 	accumulate_forces<<<blocks,THREADS_PER_BLOCK>>>(b);
 	move_bodies_handle_wall_collisions<<<blocks,THREADS_PER_BLOCK>>>(b);
 
-  cudaMemcpy(tmp_new_state->pos, b_arr->pos, sizeof(Vector2) * b.nbodies, cudaMemcpyDeviceToDevice);
-	cudaMemcpy(tmp_new_state->vel, b_arr->vel, sizeof(Vector2) * b.nbodies, cudaMemcpyDeviceToDevice);
+  copy_state_kernel<<<blocks,THREADS_PER_BLOCK>>>(tmp_new_state->pos, tmp_new_state->vel, b_arr->pos, b_arr->vel, b.nbodies);
 
 	handle_body_body_collisions<<<blocks,THREADS_PER_BLOCK>>>(b, *tmp_new_state);
 
-	cudaDeviceSynchronize();
 	Vector2* swap_pos = tmp_new_state->pos;
 	Vector2* swap_vel = tmp_new_state->vel;
 	tmp_new_state->pos = b_arr->pos;
@@ -134,4 +132,14 @@ __global__ void handle_body_body_collisions(Bodies b_arr, DoubleBuffers tmp_new_
 
     }
   }
+}
+__global__ void copy_state_kernel(Vector2* dest_pos, Vector2* dest_vel, Vector2* src_pos, Vector2* src_vel, int n)
+{
+    long i = (long)blockIdx.x * blockDim.x + threadIdx.x;
+    if(i >= n)
+    {
+        return;
+    }
+    dest_pos[i] = src_pos[i];
+    dest_vel[i] = src_vel[i];
 }

@@ -29,7 +29,6 @@ void* physics_worker(void* arg)
         if(!threads_running) break;
 
         reset_accelerations(b, start, end);
-        pthread_barrier_wait(&barrier_sync);
 
         accumulate_forces(b, start, end);
         pthread_barrier_wait(&barrier_sync);
@@ -221,7 +220,7 @@ Vector2 check_collisions_circles(float* scalar_dist, Vector2 apos, float ar, Vec
         return (Vector2){1, 0};
     }
 
-    float dist = sqrtf(distsq) + SQRTF_SOFTEN;
+    float dist = sqrtf(distsq);
     *scalar_dist = dist;
     return (Vector2){delta.x/dist, delta.y/dist};
 }

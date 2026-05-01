@@ -44,13 +44,10 @@ __device__ Vector2 check_collisions_circles(float* scalar_dist,Vector2 apos, flo
 	{
 		//not sure if I have to calculate the peenetration of this case
 		*scalar_dist = 0.0f;
-		return (Vector2)
-		{
-			1,0
-		};
+		return (Vector2){1,0};
 	} 
 
-	float dist = sqrtf(distsq)+SQRTF_SOFTEN;
+	float dist = sqrtf(distsq);
 	*scalar_dist = dist;
 	return (Vector2){delta.x/dist, delta.y/dist};
 }

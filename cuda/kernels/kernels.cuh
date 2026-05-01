@@ -12,5 +12,5 @@ __global__ void reset_accelerations(Bodies b);
 __global__ void accumulate_forces(Bodies b);
 __global__ void move_bodies_handle_wall_collisions(Bodies b);
 __global__ void handle_body_body_collisions(Bodies b, DoubleBuffers old);
-
+__global__ void copy_state_kernel(Vector2* dest_pos, Vector2* dest_vel, Vector2* src_pos, Vector2* src_vel, int n);
 #endif //KERNELS
