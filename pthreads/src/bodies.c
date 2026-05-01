@@ -19,7 +19,7 @@ void alloc_rand_nbodies(Bodies* b, Color** colors, int nbodies)
         b->acc[i] = (Vector2){0,0};
         b->pos_next[i] = b->pos[i];
         b->vel_next[i] = b->vel[i];
-        b->r[i] = 10.0f;
+        b->r[i] = 1.0f;
         b->m[i] = 10.0f;
         (*colors)[i] = rand_color();
     }

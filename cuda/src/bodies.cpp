@@ -52,8 +52,8 @@ int alloc_rand_nbodies_host(Bodies* h_bodies, int nbodies)
 		h_bodies->pos[i] = (Vector2){rand_float(0,WIDTH),rand_float(0,HEIGHT)};
 		h_bodies->vel[i] = (Vector2){rand_float(-20.0,20.0),rand_float(-20.0,20.0)};
 		h_bodies->acc[i] = (Vector2){0,0};
-		h_bodies->m[i] = 10.;
-		h_bodies->r[i] = 1.;
+		h_bodies->m[i] = 10.f;
+		h_bodies->r[i] = 1.f;
 	}
 
 	return 0;
