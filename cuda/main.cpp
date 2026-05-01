@@ -57,7 +57,7 @@ int main(int argc, char** argv){
 	}
 	assign_rand_colors(colors,nbodies);
 
-	InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ SERIAL ]");
+	InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ GPU OFFLOADED ]");
 	if(!IsWindowReady())
 	{
 		free_d_bodies(d_bodies, tmp_new_bufs);
@@ -92,7 +92,7 @@ int main(int argc, char** argv){
 	double average_update_time = 0;
 	double average_hotpath_memcpy_time = 0;
   //SetTargetFPS(FPS);
-	while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 10)
+	while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 30)
 	{
 
 		frametime_start = GetTime();
