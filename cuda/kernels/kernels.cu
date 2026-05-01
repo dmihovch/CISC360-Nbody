@@ -5,21 +5,26 @@
 
 
 
-void update_bodies(Bodies b_arr, DoubleBuffers tmp_new_state){
-
-  long blocks = ((b_arr.nbodies + THREADS_PER_BLOCK) - 1) / THREADS_PER_BLOCK;
+void update_bodies(Bodies* b_arr, DoubleBuffers* tmp_new_state){
+  Bodies b = *b_arr;
+  long blocks = ((b.nbodies + THREADS_PER_BLOCK) - 1) / THREADS_PER_BLOCK;
   
-	reset_accelerations<<<blocks,THREADS_PER_BLOCK>>>(b_arr);
-	accumulate_forces<<<blocks,THREADS_PER_BLOCK>>>(b_arr);
-	move_bodies_handle_wall_collisions<<<blocks,THREADS_PER_BLOCK>>>(b_arr);
-	handle_body_body_collisions<<<blocks,THREADS_PER_BLOCK>>>(b_arr, tmp_new_state);
+	reset_accelerations<<<blocks,THREADS_PER_BLOCK>>>(b);
+	accumulate_forces<<<blocks,THREADS_PER_BLOCK>>>(b);
+	move_bodies_handle_wall_collisions<<<blocks,THREADS_PER_BLOCK>>>(b);
+
+  cudaMemcpy(tmp_new_state->pos, b_arr->pos, sizeof(Vector2) * b.nbodies, cudaMemcpyDeviceToDevice);
+	cudaMemcpy(tmp_new_state->vel, b_arr->vel, sizeof(Vector2) * b.nbodies, cudaMemcpyDeviceToDevice);
+
+	handle_body_body_collisions<<<blocks,THREADS_PER_BLOCK>>>(b, *tmp_new_state);
+
 	cudaDeviceSynchronize();
-	Vector2* swap_pos = tmp_new_state.pos;
-	Vector2* swap_vel = tmp_new_state.vel;
-	tmp_new_state.pos = b_arr.pos;
-	tmp_new_state.vel = b_arr.vel;
-	b_arr.pos = swap_pos;
-	b_arr.vel = swap_vel;
+	Vector2* swap_pos = tmp_new_state->pos;
+	Vector2* swap_vel = tmp_new_state->vel;
+	tmp_new_state->pos = b_arr->pos;
+	tmp_new_state->vel = b_arr->vel;
+	b_arr->pos = swap_pos;
+	b_arr->vel = swap_vel;
 }
 
 
@@ -50,7 +55,7 @@ __global__ void accumulate_forces(Bodies b_arr)
     } 
     Vector2 delta = vec2_sub(b_arr.pos[j],b_arr.pos[i]);
     float distsq = vec2_dot(delta,delta);
-    float dist = sqrtf(distsq);
+    float dist = sqrtf(distsq) + SQRTF_SOFTEN;
     Vector2 rhat = vec2_scalar_mult(delta,1/dist);
     float grav_mass_dist = (GRAVITY * b_arr.m[i] * b_arr.m[j]) / distsq;
     Vector2 force = vec2_scalar_mult(rhat,grav_mass_dist);

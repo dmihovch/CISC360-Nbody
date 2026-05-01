@@ -3,7 +3,7 @@
 __device__ void handle_penetration(Vector2* i_pos, float i_rad, float j_rad, float i_mass, float j_mass ,Vector2 normal, float scalar_distance)
 {
 	float penetration_distance = i_rad + j_rad;
-	if(scalar_distance > 0.)
+	if(scalar_distance > 0.0f)
 	{
 		penetration_distance -= scalar_distance;
 	}
@@ -40,17 +40,17 @@ __device__ Vector2 check_collisions_circles(float* scalar_dist,Vector2 apos, flo
 	{
 		return (Vector2){0,0};
 	}
-	if(distsq == 0.)
+	if(distsq == 0.0f)
 	{
 		//not sure if I have to calculate the peenetration of this case
-		*scalar_dist = 0.;
+		*scalar_dist = 0.0f;
 		return (Vector2)
 		{
 			1,0
 		};
 	} 
 
-	float dist = sqrtf(distsq);
+	float dist = sqrtf(distsq)+SQRTF_SOFTEN;
 	*scalar_dist = dist;
 	return (Vector2){delta.x/dist, delta.y/dist};
 }

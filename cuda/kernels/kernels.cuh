@@ -7,7 +7,7 @@
 #include "../include/physics.cuh"
 
 #define THREADS_PER_BLOCK 256
-void update_bodies(Bodies b, DoubleBuffers old);
+void update_bodies(Bodies* b, DoubleBuffers* tmp);
 __global__ void reset_accelerations(Bodies b);
 __global__ void accumulate_forces(Bodies b);
 __global__ void move_bodies_handle_wall_collisions(Bodies b);

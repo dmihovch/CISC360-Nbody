@@ -67,12 +67,10 @@ int main(int argc, char** argv){
 	}
 
 	cudaMemcpy(d_bodies.pos,h_bodies.pos,sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
-	cudaMemcpy(d_bodies.vel,h_bodies.vel,sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
-	cudaMemcpy(d_bodies.r,h_bodies.r,sizeof(float)*nbodies,cudaMemcpyHostToDevice);
-	cudaMemcpy(d_bodies.m,h_bodies.m,sizeof(float)*nbodies,cudaMemcpyHostToDevice);
-	cudaMemcpy(tmp_new_bufs.pos, d_bodies.pos, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToDevice);
-	cudaMemcpy(tmp_new_bufs.vel, d_bodies.vel,sizeof(Vector2)* nbodies, cudaMemcpyDeviceToDevice);
-	
+	cudaMemcpy(d_bodies.vel, h_bodies.vel, sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
+	cudaMemcpy(d_bodies.acc, h_bodies.acc, sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
+	cudaMemcpy(d_bodies.r, h_bodies.r, sizeof(float)*nbodies,cudaMemcpyHostToDevice);
+	cudaMemcpy(d_bodies.m, h_bodies.m, sizeof(float)*nbodies,cudaMemcpyHostToDevice);
 	double hotpath_memcpy_start = 0;
 	double hotpath_memcpy_end = 0;
 
@@ -100,7 +98,7 @@ int main(int argc, char** argv){
 		frametime_start = GetTime();
 
 		update_start = GetTime();
-		update_bodies(d_bodies, tmp_new_bufs);
+		update_bodies(&d_bodies, &tmp_new_bufs);
 
 		//errors
 		if(cudaDeviceSynchronize() != cudaSuccess)
@@ -112,13 +110,7 @@ int main(int argc, char** argv){
 		hotpath_memcpy_start = GetTime();
 
 		//errors
-		if(
-			cudaMemcpy(h_bodies.pos, d_bodies.pos, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess ||
-			cudaMemcpy(h_bodies.vel, d_bodies.vel,sizeof(Vector2)* nbodies, cudaMemcpyDeviceToHost) != cudaSuccess ||
-			cudaMemcpy(h_bodies.acc, d_bodies.acc, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess ||
-			cudaMemcpy(h_bodies.m, d_bodies.m, sizeof(float)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess ||
-			cudaMemcpy(h_bodies.r, d_bodies.r, sizeof(float)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess
-		) {
+		if(cudaMemcpy(h_bodies.pos, d_bodies.pos, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToHost) != cudaSuccess) {
 				goto free_and_exit;
 			}
 
