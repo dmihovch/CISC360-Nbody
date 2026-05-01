@@ -2,101 +2,92 @@
 #include "include/bodies.h"
 #include "include/physics.h"
 #include <raylib.h>
+#include <stdio.h>
 
+int main(int argc, char** argv)
+{
+    srand(420);
+    int nbodies = BODIES;
 
-int main(int argc, char** argv){
+    if(argc >= 2)
+    {
+        int argv_bodies = atoi(argv[1]);
+        if(argv_bodies >= 1)
+        {
+            nbodies = argv_bodies;
+        }
+        else
+        {
+            printf("Your input couldn't be parsed, defaulting to %d bodies\n", nbodies);
+        }
+    }
+    else
+    {
+        printf("No body count passed to program\nUsing default value of %d bodies\nUsage: ./serial <body count>\n", nbodies);
+    }
 
-	srand(420);
-	int nbodies = BODIES;
+    Bodies bodies;
+    Color* colors;
+    alloc_rand_nbodies(&bodies, &colors, nbodies);
 
-	if(argc >= 2)
-	{
-		int argv_bodies = atoi(argv[1]);
-		if(argv_bodies >= 1)
-		{
-			nbodies = argv_bodies;
-		}
-		else{
-			printf("Your input couldn't be parsed, defaulting to %d bodies\n",nbodies);
-		}
-	}
-	else{
-		printf("No body count passed to program\nUsing default value of %d bodies\nUsage: ./serial <body count>\n",nbodies);
-	}
+    InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ SERIAL ]");
+    if(!IsWindowReady())
+    {
+        free_bodies(&bodies, colors);
+        return 1;
+    }
 
-	Body* bodies = alloc_rand_nbodies(nbodies);
-	if(bodies == NULL)
-	{
-		printf("Failed to allocate %d bodies\n",nbodies);
-		return 1;
-	}
+    double frametime_start;
+    double frametime_end;
 
-	InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ SERIAL ]");
-	if(!IsWindowReady())
-	{
-		free(bodies);
-		return 1;
-	}
-	
+    double render_start;
+    double render_end;
 
-	double frametime_start;
-	double frametime_end;
+    double update_start;
+    double update_end;
+    
+    double total_frame_time = 0;
+    double total_update_time = 0;
+    long long total_frames = 0;
 
-	double render_start;
-	double render_end;
+    while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 10)
+    {
+        frametime_start = GetTime();
 
-	double update_start;
-	double update_end;
-	
-	double total_frame_time = 0;
-	double total_update_time = 0;
-	long long total_frames = 0;
+        update_start = GetTime();
+        update_bodies(&bodies);
+        update_end = GetTime();
 
-  //SetTargetFPS(FPS);
-	while(!WindowShouldClose() && GetKeyPressed() != KEY_Q && GetTime() <= 10)
-	{
+        render_start = GetTime();
+        BeginDrawing();
+        ClearBackground(BLACK);
+        draw_bodies(bodies, colors);
+        render_end = GetTime();
 
-		frametime_start = GetTime();
+        DrawFPS(0, 0);
 
-		update_start = GetTime();
-		update_bodies(bodies, nbodies);
-		update_end = GetTime();
+        EndDrawing();
 
+        frametime_end = GetTime();
 
-		render_start = GetTime();
-		BeginDrawing();
-		ClearBackground(BLACK);
-		draw_bodies(bodies, nbodies);
-		render_end = GetTime();
+        total_frame_time += (frametime_end - frametime_start);
+        total_update_time += (update_end - update_start);
+        total_frames++;
+    }
 
-		DrawFPS(0, 0);
+    double average_frame_time = (total_frame_time * 1000) / total_frames;
+    double average_update_time = (total_update_time * 1000) / total_frames;
+    printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\ntotal_frames: %lld\n\n", average_frame_time, average_update_time, total_frames);
+    
+    free_bodies(&bodies, colors);
 
+    if(WindowShouldClose())
+    {
+        CloseWindow();
+        return 1;
+    }
 
-
-		//draw_diagnostics(frametime_start, frametime_end, render_start, render_end, update_start, update_end, nbodies);
-
-		EndDrawing();
-
-		frametime_end = GetTime();
-
-		total_frame_time += (frametime_end - frametime_start);
-		total_update_time += (update_end - update_start);
-		total_frames++;
-	}
-
-
-	double average_frame_time = (total_frame_time * 1000) / total_frames;
-	double average_update_time = (total_update_time * 1000) / total_frames;
-	printf("\n\n=======AVERAGES=======\nframe_time: %.5f ms\nupdate_time: %.5f ms\ntotal_frames: %lld\n\n",average_frame_time,average_update_time,total_frames);
-	
-	free(bodies);
-
-	if(WindowShouldClose())
-	{
-		CloseWindow();
-		return 1;
-	}
-
-	CloseWindow();
-	return 0;
+    CloseWindow();
+    return 0;
 }
+

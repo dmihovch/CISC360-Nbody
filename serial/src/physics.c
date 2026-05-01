@@ -1,148 +1,145 @@
 #include "../include/physics.h"
 
-
-void update_bodies(Body* b_arr, int nbodies){
-	reset_accelerations(b_arr,nbodies);
-	accumulate_forces(b_arr,nbodies);
-	move_bodies_handle_wall_collisions(b_arr,nbodies);
-	handle_body_body_collisions(b_arr,nbodies);
+void update_bodies(Bodies* b)
+{
+    reset_accelerations(b);
+    accumulate_forces(b);
+    move_bodies_handle_wall_collisions(b);
+    handle_body_body_collisions(b);
 }
 
-void reset_accelerations(Body* b_arr, int nbodies)
+void reset_accelerations(Bodies* b)
 {
-	for(int i = 0; i<nbodies; ++i)
-	{
-		vec2_zero(&b_arr[i].acc);
-	}
+    for(size_t i = 0; i < b->nbodies; ++i)
+    {
+        vec2_zero(&b->acc[i]);
+    }
 }
 
-void accumulate_forces(Body* b_arr, int nbodies)
+void accumulate_forces(Bodies* b)
 {
-	for(int i = 0; i<nbodies; ++i)
-	{
-		for(int j = i + 1; j<nbodies; ++j)
-		{
-			//calculate the forces for both i and j
-			//inverse square law
-			Vector2 delta = vec2_sub(b_arr[j].pos, b_arr[i].pos);
-			float distsq = vec2_dot(delta, delta);
-			float dist = sqrtf(distsq);
-			Vector2 rhat = vec2_scalar_mult(delta, 1/dist);
-			float grav_mass_dist = (GRAVITY*b_arr[i].m*b_arr[j].m) / distsq;
-			Vector2 force = vec2_scalar_mult(rhat, grav_mass_dist);
-			Vector2 force_mass_pofi = vec2_scalar_mult(force, 1/b_arr[i].m);
-			Vector2 force_mass_pofj = vec2_scalar_mult(force, 1/b_arr[j].m);
-			vec2_add_ip(&b_arr[i].acc, force_mass_pofi);
-			vec2_sub_ip(&b_arr[j].acc, force_mass_pofj);
-		}
-	}
+    for(size_t i = 0; i < b->nbodies; ++i)
+    {
+        for(size_t j = i + 1; j < b->nbodies; ++j)
+        {
+            Vector2 delta = vec2_sub(b->pos[j], b->pos[i]);
+            float distsq = vec2_dot(delta, delta);
+            float dist = sqrtf(distsq) + SQRTF_SOFTEN;
+            Vector2 rhat = vec2_scalar_mult(delta, 1/dist);
+            float grav_mass_dist = (GRAVITY * b->m[i] * b->m[j]) / distsq;
+            Vector2 force = vec2_scalar_mult(rhat, grav_mass_dist);
+            Vector2 force_mass_pofi = vec2_scalar_mult(force, 1/b->m[i]);
+            Vector2 force_mass_pofj = vec2_scalar_mult(force, 1/b->m[j]);
+            vec2_add_ip(&b->acc[i], force_mass_pofi);
+            vec2_sub_ip(&b->acc[j], force_mass_pofj);
+        }
+    }
 }
 
-void move_bodies_handle_wall_collisions(Body* b_arr, int nbodies)
+void move_bodies_handle_wall_collisions(Bodies* b)
 {
-	for(int i = 0; i<nbodies; ++i)
-	{
-		vec2_add_ip(&b_arr[i].vel,vec2_scalar_mult(b_arr[i].acc, DT));
-		vec2_add_ip(&b_arr[i].pos,vec2_scalar_mult(b_arr[i].vel, DT));
+    for(size_t i = 0; i < b->nbodies; ++i)
+    {
+        vec2_add_ip(&b->vel[i], vec2_scalar_mult(b->acc[i], DT));
+        vec2_add_ip(&b->pos[i], vec2_scalar_mult(b->vel[i], DT));
 
-		if(b_arr[i].pos.x + b_arr[i].r > WIDTH)
-		{
-			b_arr[i].pos.x = WIDTH - b_arr[i].r;
-			b_arr[i].vel.x = -b_arr[i].vel.x * ELASTICITY;
-		}
-		else if(b_arr[i].pos.x - b_arr[i].r < 0)
-		{
-			b_arr[i].pos.x = b_arr[i].r;
-			b_arr[i].vel.x = -b_arr[i].vel.x * ELASTICITY;
-		}
-		if(b_arr[i].pos.y + b_arr[i].r > HEIGHT)
-		{
-			b_arr[i].pos.y = HEIGHT - b_arr[i].r;
-			b_arr[i].vel.y = -b_arr[i].vel.y * ELASTICITY;
-		}
-		else if(b_arr[i].pos.y - b_arr[i].r < 0)
-		{
-			b_arr[i].pos.y = b_arr[i].r;
-			b_arr[i].vel.y = -b_arr[i].vel.y * ELASTICITY;
-		}
-	}
-
+        if(b->pos[i].x + b->r[i] > WIDTH)
+        {
+            b->pos[i].x = WIDTH - b->r[i];
+            b->vel[i].x = -b->vel[i].x * ELASTICITY;
+        }
+        else if(b->pos[i].x - b->r[i] < 0)
+        {
+            b->pos[i].x = b->r[i];
+            b->vel[i].x = -b->vel[i].x * ELASTICITY;
+        }
+        
+        if(b->pos[i].y + b->r[i] > HEIGHT)
+        {
+            b->pos[i].y = HEIGHT - b->r[i];
+            b->vel[i].y = -b->vel[i].y * ELASTICITY;
+        }
+        else if(b->pos[i].y - b->r[i] < 0)
+        {
+            b->pos[i].y = b->r[i];
+            b->vel[i].y = -b->vel[i].y * ELASTICITY;
+        }
+    }
 }
 
-void handle_body_body_collisions(Body* b_arr, int nbodies)
+void handle_body_body_collisions(Bodies* b)
 {
-	for(int i = 0; i < nbodies; ++i)
-	{
-		for(int j = i+1; j<nbodies; ++j)
-		{
-			float scalar_dist;	
-			Vector2 normal = check_collisions_circles(&scalar_dist,b_arr[i].pos, b_arr[i].r, b_arr[j].pos, b_arr[j].r);
-			if(collision_occured(normal)){
-				float impulse = calculate_impulse(b_arr[i], b_arr[j], normal);
-				Vector2 impulse_vector = vec2_scalar_mult(normal, impulse);
-				//this is messy, I don't like it, but it's not the point
-				vec2_add_ip(&b_arr[i].vel, vec2_scalar_mult(impulse_vector, 1/b_arr[i].m));
-				vec2_add_ip(&b_arr[j].vel, vec2_scalar_mult(impulse_vector, -(1/b_arr[j].m)));
-				handle_penetration(&b_arr[i], &b_arr[j], normal, scalar_dist);
-			}
-		}
-	}
+    for(size_t i = 0; i < b->nbodies; ++i)
+    {
+        for(size_t j = i + 1; j < b->nbodies; ++j)
+        {
+            float scalar_dist;
+            Vector2 normal = check_collisions_circles(&scalar_dist, b->pos[i], b->r[i], b->pos[j], b->r[j]);
+            if(collision_occured(normal))
+            {
+                float impulse = calculate_impulse(b->vel[i], b->vel[j], b->m[i], b->m[j], normal);
+                Vector2 impulse_vector = vec2_scalar_mult(normal, impulse);
+                
+                vec2_add_ip(&b->vel[i], vec2_scalar_mult(impulse_vector, 1/b->m[i]));
+                vec2_add_ip(&b->vel[j], vec2_scalar_mult(impulse_vector, -(1/b->m[j])));
+                
+                handle_penetration(&b->pos[i], &b->pos[j], b->r[i], b->r[j], b->m[i], b->m[j], normal, scalar_dist);
+            }
+        }
+    }
 }
 
-void handle_penetration(Body* a, Body* b,Vector2 normal, float scalar_distance)
+void handle_penetration(Vector2* a_pos, Vector2* b_pos, float a_r, float b_r, float a_m, float b_m, Vector2 normal, float scalar_distance)
 {
-	float penetration_distance = a->r + b->r;
-	if(scalar_distance > 0.)
-	{
-		penetration_distance -= scalar_distance;
-	}
-	Vector2 scaled_normal = vec2_scalar_mult(normal, penetration_distance*PERCENT_CORRECTION);
+    float penetration_distance = a_r + b_r;
+    if(scalar_distance > 0.0f)
+    {
+        penetration_distance -= scalar_distance;
+    }
+    Vector2 scaled_normal = vec2_scalar_mult(normal, penetration_distance * PERCENT_CORRECTION);
 
-	float mass_for_a = b->m/(a->m + b->m);
-	float mass_for_b = a->m/(a->m + b->m);
+    float mass_for_a = b_m / (a_m + b_m);
+    float mass_for_b = a_m / (a_m + b_m);
 
-	Vector2 a_correction = vec2_scalar_mult(scaled_normal, mass_for_a);
-	Vector2 b_correction = vec2_scalar_mult(scaled_normal, mass_for_b);
+    Vector2 a_correction = vec2_scalar_mult(scaled_normal, mass_for_a);
+    Vector2 b_correction = vec2_scalar_mult(scaled_normal, mass_for_b);
 
-	vec2_sub_ip(&a->pos, a_correction);
-	vec2_add_ip(&b->pos, b_correction);
+    vec2_sub_ip(a_pos, a_correction);
+    vec2_add_ip(b_pos, b_correction);
 }
-float calculate_impulse(Body a, Body b, Vector2 normal)
+
+float calculate_impulse(Vector2 a_vel, Vector2 b_vel, float a_m, float b_m, Vector2 normal)
 {
-	Vector2 relative_vel = vec2_sub(a.vel, b.vel);
-	float relative_normal = vec2_dot(relative_vel,normal);
-	float inverse_masses = (1/a.m) + (1/b.m);
-	float neg1plusE = -(1 + ELASTICITY);
-	return (neg1plusE * relative_normal) / inverse_masses;
+    Vector2 relative_vel = vec2_sub(a_vel, b_vel);
+    float relative_normal = vec2_dot(relative_vel, normal);
+    float inverse_masses = (1/a_m) + (1/b_m);
+    float neg1plusE = -(1 + ELASTICITY);
+    return (neg1plusE * relative_normal) / inverse_masses;
 }
 
 bool collision_occured(Vector2 normal)
 {
-	return (normal.x != 0 && normal.y != 0);
+    return (normal.x != 0 && normal.y != 0);
 }
 
-Vector2 check_collisions_circles(float* scalar_dist,Vector2 apos, float ar, Vector2 bpos, float br)
+Vector2 check_collisions_circles(float* scalar_dist, Vector2 apos, float ar, Vector2 bpos, float br)
 {
+    *scalar_dist = -1;
+    Vector2 delta = vec2_sub(bpos, apos);
+    float distsq = vec2_dot(delta, delta);
+    float rsq = (ar + br) * (ar + br);
+    
+    if(distsq > rsq)
+    {
+        return (Vector2){0, 0};
+    }
+    if(distsq == 0.0f)
+    {
+        *scalar_dist = 0.0f;
+        return (Vector2){1, 0};
+    }
 
-	*scalar_dist = -1;
-	Vector2 delta = vec2_sub(bpos, apos);
-	float distsq = vec2_dot(delta,delta);
-	float rsq = (ar+br) * (ar+br);
-	if(distsq > rsq)
-	{
-		return (Vector2){0,0};
-	}
-	if(distsq == 0.)
-	{
-		//not sure if I have to calculate the peenetration of this case
-		*scalar_dist = 0.;
-		return (Vector2)
-		{
-			1,0
-		};
-	} 
-
-	float dist = sqrtf(distsq);
-	*scalar_dist = dist;
-	return (Vector2){delta.x/dist, delta.y/dist};
+    float dist = sqrtf(distsq) + SQRTF_SOFTEN;
+    *scalar_dist = dist;
+    return (Vector2){delta.x/dist, delta.y/dist};
 }
