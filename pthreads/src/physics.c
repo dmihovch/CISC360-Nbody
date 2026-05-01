@@ -1,27 +1,108 @@
 #include "../include/physics.h"
+#include <stdlib.h>
+
+typedef struct {
+    int id;
+    size_t start;
+    size_t end;
+    Bodies* b;
+} ThreadArgs;
+
+static pthread_barrier_t barrier_start;
+static pthread_barrier_t barrier_sync;
+static pthread_barrier_t barrier_end;
+static bool threads_running = true;
+static int num_threads = 1;
+static pthread_t* threads;
+static ThreadArgs* thread_args;
+
+void* physics_worker(void* arg)
+{
+    ThreadArgs* args = (ThreadArgs*)arg;
+    Bodies* b = args->b;
+    size_t start = args->start;
+    size_t end = args->end;
+
+    while(1)
+    {
+        pthread_barrier_wait(&barrier_start);
+        if(!threads_running) break;
+
+        reset_accelerations(b, start, end);
+        pthread_barrier_wait(&barrier_sync);
+
+        accumulate_forces(b, start, end);
+        pthread_barrier_wait(&barrier_sync);
+
+        move_bodies_handle_wall_collisions(b, start, end);
+        pthread_barrier_wait(&barrier_sync);
+
+        handle_body_body_collisions(b, start, end);
+        pthread_barrier_wait(&barrier_sync);
+
+        apply_buffers(b, start, end);
+        pthread_barrier_wait(&barrier_end);
+    }
+    return NULL;
+}
+
+void init_physics_threads(Bodies* b, int n_threads)
+{
+    num_threads = n_threads;
+    pthread_barrier_init(&barrier_start, NULL, num_threads + 1);
+    pthread_barrier_init(&barrier_sync, NULL, num_threads);
+    pthread_barrier_init(&barrier_end, NULL, num_threads + 1);
+
+    threads = malloc(sizeof(pthread_t) * num_threads);
+    thread_args = malloc(sizeof(ThreadArgs) * num_threads);
+
+    for(int i = 0; i < num_threads; ++i)
+    {
+        thread_args[i].id = i;
+        thread_args[i].b = b;
+        thread_args[i].start = (b->nbodies / num_threads) * i;
+        thread_args[i].end = (i == num_threads - 1) ? b->nbodies : thread_args[i].start + (b->nbodies / num_threads);
+        pthread_create(&threads[i], NULL, physics_worker, &thread_args[i]);
+    }
+}
+
+void cleanup_physics_threads(void)
+{
+    threads_running = false;
+    pthread_barrier_wait(&barrier_start);
+    for(int i = 0; i < num_threads; ++i)
+    {
+        pthread_join(threads[i], NULL);
+    }
+    pthread_barrier_destroy(&barrier_start);
+    pthread_barrier_destroy(&barrier_sync);
+    pthread_barrier_destroy(&barrier_end);
+    free(threads);
+    free(thread_args);
+}
 
 void update_bodies(Bodies* b)
 {
-    reset_accelerations(b);
-    accumulate_forces(b);
-    move_bodies_handle_wall_collisions(b);
-    handle_body_body_collisions(b);
+    (void)b;
+    pthread_barrier_wait(&barrier_start);
+    pthread_barrier_wait(&barrier_end);
 }
 
-void reset_accelerations(Bodies* b)
+void reset_accelerations(Bodies* b, size_t start, size_t end)
 {
-    for(size_t i = 0; i < b->nbodies; ++i)
+    for(size_t i = start; i < end; ++i)
     {
         vec2_zero(&b->acc[i]);
     }
 }
 
-void accumulate_forces(Bodies* b)
+void accumulate_forces(Bodies* b, size_t start, size_t end)
 {
-    for(size_t i = 0; i < b->nbodies; ++i)
+    for(size_t i = start; i < end; ++i)
     {
-        for(size_t j = i + 1; j < b->nbodies; ++j)
+        for(size_t j = 0; j < b->nbodies; ++j)
         {
+            if(i == j) continue;
             Vector2 delta = vec2_sub(b->pos[j], b->pos[i]);
             float distsq = vec2_dot(delta, delta);
             float dist = sqrtf(distsq) + SQRTF_SOFTEN;
@@ -29,16 +110,14 @@ void accumulate_forces(Bodies* b)
             float grav_mass_dist = (GRAVITY * b->m[i] * b->m[j]) / distsq;
             Vector2 force = vec2_scalar_mult(rhat, grav_mass_dist);
             Vector2 force_mass_pofi = vec2_scalar_mult(force, 1/b->m[i]);
-            Vector2 force_mass_pofj = vec2_scalar_mult(force, 1/b->m[j]);
             vec2_add_ip(&b->acc[i], force_mass_pofi);
-            vec2_sub_ip(&b->acc[j], force_mass_pofj);
         }
     }
 }
 
-void move_bodies_handle_wall_collisions(Bodies* b)
+void move_bodies_handle_wall_collisions(Bodies* b, size_t start, size_t end)
 {
-    for(size_t i = 0; i < b->nbodies; ++i)
+    for(size_t i = start; i < end; ++i)
     {
         vec2_add_ip(&b->vel[i], vec2_scalar_mult(b->acc[i], DT));
         vec2_add_ip(&b->pos[i], vec2_scalar_mult(b->vel[i], DT));
@@ -64,15 +143,20 @@ void move_bodies_handle_wall_collisions(Bodies* b)
             b->pos[i].y = b->r[i];
             b->vel[i].y = -b->vel[i].y * ELASTICITY;
         }
+
+        b->pos_next[i] = b->pos[i];
+        b->vel_next[i] = b->vel[i];
     }
 }
 
-void handle_body_body_collisions(Bodies* b)
+void handle_body_body_collisions(Bodies* b, size_t start, size_t end)
 {
-    for(size_t i = 0; i < b->nbodies; ++i)
+    for(size_t i = start; i < end; ++i)
     {
-        for(size_t j = i + 1; j < b->nbodies; ++j)
+        for(size_t j = 0; j < b->nbodies; ++j)
         {
+            if(i == j) continue;
+            
             float scalar_dist;
             Vector2 normal = check_collisions_circles(&scalar_dist, b->pos[i], b->r[i], b->pos[j], b->r[j]);
             if(collision_occured(normal))
@@ -80,32 +164,30 @@ void handle_body_body_collisions(Bodies* b)
                 float impulse = calculate_impulse(b->vel[i], b->vel[j], b->m[i], b->m[j], normal);
                 Vector2 impulse_vector = vec2_scalar_mult(normal, impulse);
                 
-                vec2_add_ip(&b->vel[i], vec2_scalar_mult(impulse_vector, 1/b->m[i]));
-                vec2_add_ip(&b->vel[j], vec2_scalar_mult(impulse_vector, -(1/b->m[j])));
+                vec2_add_ip(&b->vel_next[i], vec2_scalar_mult(impulse_vector, 1/b->m[i]));
                 
-                handle_penetration(&b->pos[i], &b->pos[j], b->r[i], b->r[j], b->m[i], b->m[j], normal, scalar_dist);
+                float penetration_distance = b->r[i] + b->r[j];
+                if(scalar_dist > 0.0f)
+                {
+                    penetration_distance -= scalar_dist;
+                }
+                Vector2 scaled_normal = vec2_scalar_mult(normal, penetration_distance * PERCENT_CORRECTION);
+                float mass_for_a = b->m[j] / (b->m[i] + b->m[j]);
+                Vector2 a_correction = vec2_scalar_mult(scaled_normal, mass_for_a);
+                
+                vec2_sub_ip(&b->pos_next[i], a_correction);
             }
         }
     }
 }
 
-void handle_penetration(Vector2* a_pos, Vector2* b_pos, float a_r, float b_r, float a_m, float b_m, Vector2 normal, float scalar_distance)
+void apply_buffers(Bodies* b, size_t start, size_t end)
 {
-    float penetration_distance = a_r + b_r;
-    if(scalar_distance > 0.0f)
+    for(size_t i = start; i < end; ++i)
     {
-        penetration_distance -= scalar_distance;
+        b->pos[i] = b->pos_next[i];
+        b->vel[i] = b->vel_next[i];
     }
-    Vector2 scaled_normal = vec2_scalar_mult(normal, penetration_distance * PERCENT_CORRECTION);
-
-    float mass_for_a = b_m / (a_m + b_m);
-    float mass_for_b = a_m / (a_m + b_m);
-
-    Vector2 a_correction = vec2_scalar_mult(scaled_normal, mass_for_a);
-    Vector2 b_correction = vec2_scalar_mult(scaled_normal, mass_for_b);
-
-    vec2_sub_ip(a_pos, a_correction);
-    vec2_add_ip(b_pos, b_correction);
 }
 
 float calculate_impulse(Vector2 a_vel, Vector2 b_vel, float a_m, float b_m, Vector2 normal)
@@ -143,3 +225,4 @@ Vector2 check_collisions_circles(float* scalar_dist, Vector2 apos, float ar, Vec
     *scalar_dist = dist;
     return (Vector2){delta.x/dist, delta.y/dist};
 }
+
