@@ -2,13 +2,9 @@
 #define KERNELS_CUH
 
 #include <cuda.h>
+#include <cuda_runtime.h>
 #include "../include/bodies.h"
-#include "../include/physics.h"
-
-typedef struct {
-  Vector2* pos;
-  Vector2* vel;
-} DoubleBuffers;
+#include "../include/physics.cuh"
 
 #define THREADS_PER_BLOCK 256
 void update_bodies(Bodies b, DoubleBuffers old);

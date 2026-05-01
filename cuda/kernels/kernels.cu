@@ -27,7 +27,7 @@ void update_bodies(Bodies b_arr, DoubleBuffers tmp_new_state){
 __global__ void reset_accelerations(Bodies b_arr)
 {
     long i = (long)blockIdx.x * blockDim.x + threadIdx.x;
-  if(i >= nbodies)
+  if(i >= b_arr.nbodies)
   {
     return;
   }
@@ -37,7 +37,7 @@ __global__ void reset_accelerations(Bodies b_arr)
 __global__ void accumulate_forces(Bodies b_arr)
 {
   long i = (long)blockIdx.x * blockDim.x + threadIdx.x;
-  if(i >= nbodies)
+  if(i >= b_arr.nbodies)
   {
     return;
   }
@@ -63,34 +63,34 @@ __global__ void move_bodies_handle_wall_collisions(Bodies b_arr)
 {
   
   long i = (long)blockIdx.x * blockDim.x + threadIdx.x;
-  if(i >= nbodies)
+  if(i >= b_arr.nbodies)
   {
     return;
   }
 
   
-		vec2_add_ip(&b_arr[i].vel,vec2_scalar_mult(b_arr[i].acc, DT));
-		vec2_add_ip(&b_arr[i].pos,vec2_scalar_mult(b_arr[i].vel, DT));
+		vec2_add_ip(&b_arr.vel[i],vec2_scalar_mult(b_arr.acc[i], DT));
+		vec2_add_ip(&b_arr.pos[i],vec2_scalar_mult(b_arr.vel[i], DT));
 
-		if(b_arr[i].pos.x + b_arr[i].r > WIDTH)
+		if(b_arr.pos[i].x + b_arr.r[i] > WIDTH)
 		{
-			b_arr[i].pos.x = WIDTH - b_arr[i].r;
-			b_arr[i].vel.x = -b_arr[i].vel.x * ELASTICITY;
+			b_arr.pos[i].x = WIDTH - b_arr.r[i];
+			b_arr.vel[i].x = -b_arr.vel[i].x * ELASTICITY;
 		}
-		else if(b_arr[i].pos.x - b_arr[i].r < 0)
+		else if(b_arr.pos[i].x - b_arr.r[i] < 0)
 		{
-			b_arr[i].pos.x = b_arr[i].r;
-			b_arr[i].vel.x = -b_arr[i].vel.x * ELASTICITY;
+			b_arr.pos[i].x = b_arr.r[i];
+			b_arr.vel[i].x = -b_arr.vel[i].x * ELASTICITY;
 		}
-		if(b_arr[i].pos.y + b_arr[i].r > HEIGHT)
+		if(b_arr.pos[i].y + b_arr.r[i] > HEIGHT)
 		{
-			b_arr[i].pos.y = HEIGHT - b_arr[i].r;
-			b_arr[i].vel.y = -b_arr[i].vel.y * ELASTICITY;
+			b_arr.pos[i].y = HEIGHT - b_arr.r[i];
+			b_arr.vel[i].y = -b_arr.vel[i].y * ELASTICITY;
 		}
-		else if(b_arr[i].pos.y - b_arr[i].r < 0)
+		else if(b_arr.pos[i].y - b_arr.r[i] < 0)
 		{
-			b_arr[i].pos.y = b_arr[i].r;
-			b_arr[i].vel.y = -b_arr[i].vel.y * ELASTICITY;
+			b_arr.pos[i].y = b_arr.r[i];
+			b_arr.vel[i].y = -b_arr.vel[i].y * ELASTICITY;
 		}
 
 
@@ -103,7 +103,7 @@ __global__ void handle_body_body_collisions(Bodies b_arr, DoubleBuffers tmp_new_
 {
   
   long i = (long)blockIdx.x * blockDim.x + threadIdx.x;
-  if(i >= nbodies)
+  if(i >= b_arr.nbodies)
   {
     return;
   }
@@ -120,12 +120,12 @@ __global__ void handle_body_body_collisions(Bodies b_arr, DoubleBuffers tmp_new_
     if(collision_occured(normal))
     {
       //todo fix function sig
-      float impulse = calculate_impulse(b_arr.vel[i], b_arr.m[i], b_arr.vel[j], b_arr.m[j], normal);
+      float impulse = calculate_impulse(b_arr.vel[i],  b_arr.vel[j],b_arr.m[i], b_arr.m[j], normal);
       Vector2 impulse_vector = vec2_scalar_mult(normal,impulse);
 
       vec2_add_ip(&tmp_new_state.vel[i], vec2_scalar_mult(impulse_vector, 1/b_arr.m[i]));
       //need to adjust this function for cuda
-      handle_penetration(&tmp_new_state.pos[i], b_arr.pos[j], normal, scalar_dist);
+      handle_penetration(&tmp_new_state.pos[i], b_arr.r[i], b_arr.r[j], b_arr.m[i], b_arr.m[j], normal, scalar_dist);
 
     }
   }

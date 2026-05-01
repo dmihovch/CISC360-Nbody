@@ -1,5 +1,4 @@
 #include "../include/physics.cuh"
-#include "../kernels/kernels.cuh"
 
 __device__ void handle_penetration(Vector2* i_pos, float i_rad, float j_rad, float i_mass, float j_mass ,Vector2 normal, float scalar_distance)
 {

@@ -1,5 +1,6 @@
 #include "include/drawing.h"
 #include "kernels/kernels.cuh"
+#include "include/constants.h"
 #include "include/bodies.h"
 #include <cuda_runtime_api.h>
 #include <raylib.h>
@@ -36,13 +37,12 @@ int main(int argc, char** argv){
 	}
 
 	Bodies d_bodies;
-	Vector2* d_old_pos;
-	Vector2* d_old_vel;
-	err = alloc_rand_nbodies_device(&d_bodies, &d_old_pos, &d_old_vel, nbodies);
+	DoubleBuffers tmp_new_bufs;
+	err = alloc_rand_nbodies_device(&d_bodies, &tmp_new_bufs, nbodies);
 	if(err)
 	{
 		printf("Failed to allocate %d bodies on GPU\n",nbodies);
-		free_d_bodies(d_bodies, d_old_pos, d_old_vel);
+		free_d_bodies(d_bodies, tmp_new_bufs);
 		free_h_bodies(h_bodies);
 		return 1;
 	}
@@ -52,7 +52,7 @@ int main(int argc, char** argv){
 	if(colors == NULL)
 	{
 		free_h_bodies(h_bodies);
-		free_d_bodies(d_bodies);
+		free_d_bodies(d_bodies, tmp_new_bufs);
 		return 1;
 	}
 	assign_rand_colors(colors,nbodies);
@@ -60,12 +60,18 @@ int main(int argc, char** argv){
 	InitWindow(WIDTH, HEIGHT, "N-Body Simulation [ SERIAL ]");
 	if(!IsWindowReady())
 	{
-		free_d_bodies(d_bodies);
+		free_d_bodies(d_bodies, tmp_new_bufs);
 		free_h_bodies(h_bodies);
 		free(colors);
 		return 1;
 	}
 
+	cudaMemcpy(d_bodies.pos,h_bodies.pos,sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
+	cudaMemcpy(d_bodies.vel,h_bodies.vel,sizeof(Vector2)*nbodies,cudaMemcpyHostToDevice);
+	cudaMemcpy(d_bodies.r,h_bodies.r,sizeof(float)*nbodies,cudaMemcpyHostToDevice);
+	cudaMemcpy(d_bodies.m,h_bodies.m,sizeof(float)*nbodies,cudaMemcpyHostToDevice);
+	cudaMemcpy(tmp_new_bufs.pos, d_bodies.pos, sizeof(Vector2)*nbodies, cudaMemcpyDeviceToDevice);
+	cudaMemcpy(tmp_new_bufs.vel, d_bodies.vel,sizeof(Vector2)* nbodies, cudaMemcpyDeviceToDevice);
 	
 	double hotpath_memcpy_start = 0;
 	double hotpath_memcpy_end = 0;
@@ -94,7 +100,7 @@ int main(int argc, char** argv){
 		frametime_start = GetTime();
 
 		update_start = GetTime();
-		update_bodies(d_bodies);
+		update_bodies(d_bodies, tmp_new_bufs);
 
 		//errors
 		if(cudaDeviceSynchronize() != cudaSuccess)
@@ -152,7 +158,7 @@ int main(int argc, char** argv){
 free_and_exit:
 	
 	free_h_bodies(h_bodies);
-	free_d_bodies(d_bodies, d_old_pos, d_old_vel);
+	free_d_bodies(d_bodies, tmp_new_bufs);
 	free(colors);
 
 	if(WindowShouldClose())
