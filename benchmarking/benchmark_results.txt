@@ -1,0 +1,740 @@
+--- SERIAL : 10 bodies (Run 1) ---
+=======AVERAGES=======
+frame_time: 0.10134 ms
+update_time: 0.00472 ms
+render_time: 0.09656 ms
+total_frames: 294472
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 10 bodies, 6 threads (Run 1) ---
+=======AVERAGES=======
+frame_time: 0.16645 ms
+update_time: 0.04872 ms
+render_time: 0.11766 ms
+total_frames: 179475
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 10 bodies (Run 1) ---
+=======AVERAGES=======
+frame_time: 0.29770 ms
+update_time: 0.10491 ms
+hotpath_memcpy_time: 0.00680 ms
+render_time: 0.17979 ms
+total_frames: 100410
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 10 bodies (Run 2) ---
+=======AVERAGES=======
+frame_time: 0.10126 ms
+update_time: 0.00455 ms
+render_time: 0.09664 ms
+total_frames: 295097
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 10 bodies, 6 threads (Run 2) ---
+=======AVERAGES=======
+frame_time: 0.16731 ms
+update_time: 0.04890 ms
+render_time: 0.11834 ms
+total_frames: 178587
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 10 bodies (Run 2) ---
+=======AVERAGES=======
+frame_time: 0.29984 ms
+update_time: 0.10530 ms
+hotpath_memcpy_time: 0.00671 ms
+render_time: 0.18154 ms
+total_frames: 99687
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 10 bodies (Run 3) ---
+=======AVERAGES=======
+frame_time: 0.10100 ms
+update_time: 0.00454 ms
+render_time: 0.09639 ms
+total_frames: 295836
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 10 bodies, 6 threads (Run 3) ---
+=======AVERAGES=======
+frame_time: 0.16736 ms
+update_time: 0.04896 ms
+render_time: 0.11833 ms
+total_frames: 178527
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 10 bodies (Run 3) ---
+=======AVERAGES=======
+frame_time: 0.29890 ms
+update_time: 0.10548 ms
+hotpath_memcpy_time: 0.00666 ms
+render_time: 0.18056 ms
+total_frames: 100003
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 10 bodies (Run 4) ---
+=======AVERAGES=======
+frame_time: 0.10174 ms
+update_time: 0.00461 ms
+render_time: 0.09707 ms
+total_frames: 293682
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 10 bodies, 6 threads (Run 4) ---
+=======AVERAGES=======
+frame_time: 0.16652 ms
+update_time: 0.04876 ms
+render_time: 0.11769 ms
+total_frames: 179427
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 10 bodies (Run 4) ---
+=======AVERAGES=======
+frame_time: 0.29654 ms
+update_time: 0.10440 ms
+hotpath_memcpy_time: 0.00670 ms
+render_time: 0.17920 ms
+total_frames: 100805
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 10 bodies (Run 5) ---
+=======AVERAGES=======
+frame_time: 0.10086 ms
+update_time: 0.00460 ms
+render_time: 0.09619 ms
+total_frames: 296187
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 10 bodies, 6 threads (Run 5) ---
+=======AVERAGES=======
+frame_time: 0.16716 ms
+update_time: 0.04882 ms
+render_time: 0.11828 ms
+total_frames: 178726
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 10 bodies (Run 5) ---
+=======AVERAGES=======
+frame_time: 0.29760 ms
+update_time: 0.10466 ms
+hotpath_memcpy_time: 0.00663 ms
+render_time: 0.18004 ms
+total_frames: 100445
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 100 bodies (Run 1) ---
+=======AVERAGES=======
+frame_time: 0.94132 ms
+update_time: 0.41120 ms
+render_time: 0.53005 ms
+total_frames: 31761
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 100 bodies, 6 threads (Run 1) ---
+=======AVERAGES=======
+frame_time: 0.58932 ms
+update_time: 0.20756 ms
+render_time: 0.38168 ms
+total_frames: 50677
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 100 bodies (Run 1) ---
+=======AVERAGES=======
+frame_time: 0.55771 ms
+update_time: 0.17768 ms
+hotpath_memcpy_time: 0.00665 ms
+render_time: 0.36707 ms
+total_frames: 53607
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 100 bodies (Run 2) ---
+=======AVERAGES=======
+frame_time: 0.93088 ms
+update_time: 0.40163 ms
+render_time: 0.52918 ms
+total_frames: 32117
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 100 bodies, 6 threads (Run 2) ---
+=======AVERAGES=======
+frame_time: 0.58677 ms
+update_time: 0.20887 ms
+render_time: 0.37783 ms
+total_frames: 50877
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 100 bodies (Run 2) ---
+=======AVERAGES=======
+frame_time: 0.56030 ms
+update_time: 0.17774 ms
+hotpath_memcpy_time: 0.00670 ms
+render_time: 0.36949 ms
+total_frames: 53357
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 100 bodies (Run 3) ---
+=======AVERAGES=======
+frame_time: 0.93365 ms
+update_time: 0.40353 ms
+render_time: 0.53005 ms
+total_frames: 32025
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 100 bodies, 6 threads (Run 3) ---
+=======AVERAGES=======
+frame_time: 0.59884 ms
+update_time: 0.21278 ms
+render_time: 0.38598 ms
+total_frames: 49878
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 100 bodies (Run 3) ---
+=======AVERAGES=======
+frame_time: 0.55843 ms
+update_time: 0.17777 ms
+hotpath_memcpy_time: 0.00663 ms
+render_time: 0.36773 ms
+total_frames: 53538
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 100 bodies (Run 4) ---
+=======AVERAGES=======
+frame_time: 0.92597 ms
+update_time: 0.40088 ms
+render_time: 0.52502 ms
+total_frames: 32289
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 100 bodies, 6 threads (Run 4) ---
+=======AVERAGES=======
+frame_time: 0.59821 ms
+update_time: 0.21626 ms
+render_time: 0.38187 ms
+total_frames: 49928
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 100 bodies (Run 4) ---
+=======AVERAGES=======
+frame_time: 0.55681 ms
+update_time: 0.17777 ms
+hotpath_memcpy_time: 0.00675 ms
+render_time: 0.36612 ms
+total_frames: 53693
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 100 bodies (Run 5) ---
+=======AVERAGES=======
+frame_time: 0.94250 ms
+update_time: 0.41330 ms
+render_time: 0.52913 ms
+total_frames: 31725
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 100 bodies, 6 threads (Run 5) ---
+=======AVERAGES=======
+frame_time: 0.59285 ms
+update_time: 0.20882 ms
+render_time: 0.38396 ms
+total_frames: 50365
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 100 bodies (Run 5) ---
+=======AVERAGES=======
+frame_time: 0.56308 ms
+update_time: 0.17832 ms
+hotpath_memcpy_time: 0.00685 ms
+render_time: 0.37144 ms
+total_frames: 53096
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 1000 bodies (Run 1) ---
+=======AVERAGES=======
+frame_time: 43.30450 ms
+update_time: 39.46272 ms
+render_time: 3.84171 ms
+total_frames: 691
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 1000 bodies, 6 threads (Run 1) ---
+=======AVERAGES=======
+frame_time: 13.03984 ms
+update_time: 9.10848 ms
+render_time: 3.93126 ms
+total_frames: 2291
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 1000 bodies (Run 1) ---
+=======AVERAGES=======
+frame_time: 3.41239 ms
+update_time: 1.00564 ms
+hotpath_memcpy_time: 0.01006 ms
+render_time: 2.38877 ms
+total_frames: 8762
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 1000 bodies (Run 2) ---
+=======AVERAGES=======
+frame_time: 43.28447 ms
+update_time: 39.46343 ms
+render_time: 3.82097 ms
+total_frames: 691
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 1000 bodies, 6 threads (Run 2) ---
+=======AVERAGES=======
+frame_time: 12.89321 ms
+update_time: 8.97489 ms
+render_time: 3.91822 ms
+total_frames: 2317
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 1000 bodies (Run 2) ---
+=======AVERAGES=======
+frame_time: 3.47482 ms
+update_time: 1.00739 ms
+hotpath_memcpy_time: 0.01013 ms
+render_time: 2.44939 ms
+total_frames: 8604
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 1000 bodies (Run 3) ---
+=======AVERAGES=======
+frame_time: 43.67280 ms
+update_time: 39.73702 ms
+render_time: 3.93571 ms
+total_frames: 685
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 1000 bodies, 6 threads (Run 3) ---
+=======AVERAGES=======
+frame_time: 13.09332 ms
+update_time: 9.17358 ms
+render_time: 3.91964 ms
+total_frames: 2281
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 1000 bodies (Run 3) ---
+=======AVERAGES=======
+frame_time: 3.45680 ms
+update_time: 1.01599 ms
+hotpath_memcpy_time: 0.01020 ms
+render_time: 2.42259 ms
+total_frames: 8648
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 1000 bodies (Run 4) ---
+=======AVERAGES=======
+frame_time: 43.32974 ms
+update_time: 39.48901 ms
+render_time: 3.84066 ms
+total_frames: 691
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 1000 bodies, 6 threads (Run 4) ---
+=======AVERAGES=======
+frame_time: 12.88609 ms
+update_time: 8.99968 ms
+render_time: 3.88632 ms
+total_frames: 2318
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 1000 bodies (Run 4) ---
+=======AVERAGES=======
+frame_time: 3.47110 ms
+update_time: 1.01139 ms
+hotpath_memcpy_time: 0.00997 ms
+render_time: 2.44169 ms
+total_frames: 8614
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 1000 bodies (Run 5) ---
+=======AVERAGES=======
+frame_time: 43.13284 ms
+update_time: 39.46255 ms
+render_time: 3.67021 ms
+total_frames: 694
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 1000 bodies, 6 threads (Run 5) ---
+=======AVERAGES=======
+frame_time: 12.71238 ms
+update_time: 8.98885 ms
+render_time: 3.72344 ms
+total_frames: 2350
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 1000 bodies (Run 5) ---
+=======AVERAGES=======
+frame_time: 3.47399 ms
+update_time: 1.00792 ms
+hotpath_memcpy_time: 0.01010 ms
+render_time: 2.44810 ms
+total_frames: 8607
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 10000 bodies (Run 1) ---
+=======AVERAGES=======
+frame_time: 4043.69118 ms
+update_time: 4020.38324 ms
+render_time: 23.30786 ms
+total_frames: 8
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 10000 bodies, 6 threads (Run 1) ---
+=======AVERAGES=======
+frame_time: 708.07248 ms
+update_time: 686.79856 ms
+render_time: 21.27382 ms
+total_frames: 43
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 10000 bodies (Run 1) ---
+=======AVERAGES=======
+frame_time: 29.42484 ms
+update_time: 9.68082 ms
+hotpath_memcpy_time: 0.02704 ms
+render_time: 19.70646 ms
+total_frames: 1017
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 10000 bodies (Run 2) ---
+=======AVERAGES=======
+frame_time: 4032.49839 ms
+update_time: 4009.35797 ms
+render_time: 23.14031 ms
+total_frames: 8
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 10000 bodies, 6 threads (Run 2) ---
+=======AVERAGES=======
+frame_time: 703.72685 ms
+update_time: 682.28057 ms
+render_time: 21.44619 ms
+total_frames: 43
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 10000 bodies (Run 2) ---
+=======AVERAGES=======
+frame_time: 29.34372 ms
+update_time: 9.65698 ms
+hotpath_memcpy_time: 0.02582 ms
+render_time: 19.65022 ms
+total_frames: 1019
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 10000 bodies (Run 3) ---
+=======AVERAGES=======
+frame_time: 4025.65452 ms
+update_time: 4002.47241 ms
+render_time: 23.18203 ms
+total_frames: 8
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 10000 bodies, 6 threads (Run 3) ---
+=======AVERAGES=======
+frame_time: 709.09150 ms
+update_time: 687.80542 ms
+render_time: 21.28598 ms
+total_frames: 43
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 10000 bodies (Run 3) ---
+=======AVERAGES=======
+frame_time: 29.32087 ms
+update_time: 9.65146 ms
+hotpath_memcpy_time: 0.02550 ms
+render_time: 19.63317 ms
+total_frames: 1020
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 10000 bodies (Run 4) ---
+=======AVERAGES=======
+frame_time: 4026.88859 ms
+update_time: 4003.90802 ms
+render_time: 22.98043 ms
+total_frames: 8
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 10000 bodies, 6 threads (Run 4) ---
+=======AVERAGES=======
+frame_time: 711.50646 ms
+update_time: 690.10886 ms
+render_time: 21.39750 ms
+total_frames: 42
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 10000 bodies (Run 4) ---
+=======AVERAGES=======
+frame_time: 29.33096 ms
+update_time: 9.63359 ms
+hotpath_memcpy_time: 0.02547 ms
+render_time: 19.66099 ms
+total_frames: 1020
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- SERIAL : 10000 bodies (Run 5) ---
+=======AVERAGES=======
+frame_time: 4025.94689 ms
+update_time: 4003.00378 ms
+render_time: 22.94300 ms
+total_frames: 8
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- PTHREADS : 10000 bodies, 6 threads (Run 5) ---
+=======AVERAGES=======
+frame_time: 710.02163 ms
+update_time: 688.60749 ms
+render_time: 21.41405 ms
+total_frames: 43
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 10000 bodies (Run 5) ---
+=======AVERAGES=======
+frame_time: 29.41639 ms
+update_time: 9.51036 ms
+hotpath_memcpy_time: 0.02485 ms
+render_time: 19.87031 ms
+total_frames: 1017
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+

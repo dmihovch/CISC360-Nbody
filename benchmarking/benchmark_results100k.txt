@@ -1,0 +1,65 @@
+--- CUDA : 100000 bodies (Run 1) ---
+=======AVERAGES=======
+frame_time: 837.75907 ms
+update_time: 643.91936 ms
+hotpath_memcpy_time: 0.14804 ms
+render_time: 193.66733 ms
+total_frames: 36
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 100000 bodies (Run 2) ---
+=======AVERAGES=======
+frame_time: 843.46561 ms
+update_time: 649.82697 ms
+hotpath_memcpy_time: 0.14804 ms
+render_time: 193.46522 ms
+total_frames: 37
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 100000 bodies (Run 3) ---
+=======AVERAGES=======
+frame_time: 847.91064 ms
+update_time: 654.42580 ms
+hotpath_memcpy_time: 0.14658 ms
+render_time: 193.31340 ms
+total_frames: 37
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 100000 bodies (Run 4) ---
+=======AVERAGES=======
+frame_time: 834.00310 ms
+update_time: 639.94399 ms
+hotpath_memcpy_time: 0.14711 ms
+render_time: 193.88717 ms
+total_frames: 36
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+
+--- CUDA : 100000 bodies (Run 5) ---
+=======AVERAGES=======
+frame_time: 833.12922 ms
+update_time: 639.09745 ms
+hotpath_memcpy_time: 0.14731 ms
+render_time: 193.85977 ms
+total_frames: 36
+
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+

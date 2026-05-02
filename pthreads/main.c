@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 {
     srand(420);
     int nbodies = BODIES;
-    int nthreads = 4;
+    int nthreads = 6;
 
     if(argc >= 2)
     {
